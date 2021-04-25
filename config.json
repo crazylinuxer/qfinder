@@ -1,0 +1,4 @@
+{
+    "SQLALCHEMY_ECHO": false,
+    "SQLALCHEMY_TRACK_MODIFICATIONS": false
+}
