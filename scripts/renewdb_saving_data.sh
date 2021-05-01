@@ -7,7 +7,7 @@ done
 
 source ./scripts/auxiliary/prepare_launch.sh
 
-if $(password_check); then
+if [[ $PGPASSWORD != '' ]]; then
     pg_dump -Fc -Z0 --data-only -U qfinder_user qfinder_db > ./qfinder_db_data.pgdump
 
     dropdb -U qfinder_user qfinder_db

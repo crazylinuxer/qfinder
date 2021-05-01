@@ -7,7 +7,7 @@ done
 
 source ./scripts/auxiliary/prepare_launch.sh
 
-if $(password_check); then
+if [[ $PGPASSWORD != '' ]]; then
     source ./.venv/bin/activate
     if command -v python3.9 > /dev/null; then
         python3.9 ./server.py

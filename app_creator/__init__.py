@@ -15,7 +15,7 @@ with open(os.path.join(app.root_path, '../config.json'), 'r') as config_file:
 
 app.config['JWT_SECRET_KEY'] = app.config['SECRET_KEY'] = app.config['JWT_KEY']
 app.config['SQLALCHEMY_DATABASE_URI'] = config.DB_CONNECTION_TEMPLATE.format(
-    'orgfeed_user', app.config["PGPASSWORD"], 'orgfeed_db'
+    'qfinder_user', app.config["PGPASSWORD"], 'qfinder_db'
 )
 
 

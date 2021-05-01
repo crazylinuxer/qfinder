@@ -7,7 +7,7 @@ done
 
 source ./scripts/auxiliary/prepare_launch.sh
 
-if $(password_check); then
+if [[ $PGPASSWORD != '' ]]; then
     dropdb -U qfinder_user qfinder_db
     createdb -U qfinder_user qfinder_db
     psql qfinder_db -U qfinder_user < ./sql/qfinder_db.sql

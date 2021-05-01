@@ -1,8 +1,8 @@
 from flask_restx.namespace import Namespace
 from flask_restx.reqparse import RequestParser
 from flask_restx import fields
-from flask import request
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask import request, redirect
+from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
 from werkzeug.datastructures import FileStorage
 
 from services import get_page, get_uuid
@@ -42,4 +42,6 @@ class LogOut(OptionsResource):
     @jwt_required()
     def post(self):
         """Logout from the account"""
-        return None, 200
+        response = redirect("/")
+        unset_jwt_cookies(response)
+        return response, 200
