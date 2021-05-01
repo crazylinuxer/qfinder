@@ -1,6 +1,12 @@
 {
+    "SWAGGER_UI_DOC_EXPANSION": "list",
+    "RESTX_VALIDATE": true,
     "SQLALCHEMY_ECHO": false,
     "SQLALCHEMY_TRACK_MODIFICATIONS": false,
+    "RESTX_MASK_SWAGGER": false,
+    "JWT_COOKIE_SECURE": false,
+    "JWT_TOKEN_LOCATION": ["cookies"],
+    "JWT_ACCESS_TOKEN_EXPIRES": 600,
     "PGPASSWORD": "qual1tyf1nder",
     "JWT_KEY": "T8MwA3VfKIk6KYvtDlnk0nnUqrFDrD5QRAR9JiadjTF0UvSoyjQRmPUrTwd_gOZHnBLzh2Tw2AhKKAKorMT9u9XVwB4hqmF8DYJKADjVlw8APXpvQW4PqiBBQiCK9Owm"
 }

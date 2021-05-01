@@ -8,6 +8,8 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm.state import InstanceState
 from sqlalchemy import Column, String, SmallInteger, Boolean, CheckConstraint, ForeignKey, DateTime, Index
 
+from app_creator import app
+
 
 db = SQLAlchemy(app)
 Base = declarative_base()
@@ -27,7 +29,7 @@ def get_dict(self):
 Base.get_dict = get_dict
 
 
-class Employee(Base):
-    __tablename__ = 'employees'
-
+# class User(Base):
+#     __tablename__ = 'users'
+#     pass
 

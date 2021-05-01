@@ -10,7 +10,7 @@ from models.auth_model import AuthModel, TokenModel
 from .utils import OptionsResource
 
 
-api = Namespace("attachment", "Attachments for news posts")
+api = Namespace("auth", "User authentication and logout")
 
 
 auth = api.model(
@@ -24,12 +24,22 @@ token = api.model(
 )
 
 
-@api.route('/')
+@api.route('')
 class Auth(OptionsResource):
-    @api.doc('employee_auth')
+    @api.doc('auth_user')
     @api.marshal_with(token, code=200)
     @api.expect(auth, validate=True)
     @api.response(401, description="Invalid credentials")
     def post(self):
         """Log into an account"""
-        return auth_service.get_token(**api.payload), 200
+        return None, 200
+
+
+@api.route('/logout')
+class LogOut(OptionsResource):
+    @api.doc('logout_user')
+    @api.response(200, description="Logout successful")
+    @jwt_required()
+    def post(self):
+        """Logout from the account"""
+        return None, 200

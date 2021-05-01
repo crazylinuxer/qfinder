@@ -27,16 +27,17 @@ class CustomApi(Api):
 
 api = CustomApi(
     api_bp,
-    title='OrgFeed API',
-    version='0.0.2-dev',
+    title='QFinder API',
+    version='0.0.1-dev',
     doc='/',
-    description='API for news feed of some organization',
+    description='API documentation for the QualityFinder',
     authorizations=authorization
 )
 
 
 api.namespaces.clear()
 api.add_namespace(auth_api)
+
 
 cors_headers = {
     "Access-Control-Allow-Origin": "*",
