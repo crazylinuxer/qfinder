@@ -29,7 +29,11 @@ def get_dict(self):
 Base.get_dict = get_dict
 
 
-# class User(Base):
-#     __tablename__ = 'users'
-#     pass
+class User(Base):
+    __tablename__ = 'users'
 
+    id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
+    first_name = Column(String(512), nullable=False)
+    last_name = Column(String(512), nullable=False)
+    email = Column(String(256), nullable=False, unique=True)
+    password_hash = Column(String(64), nullable=False)

@@ -1,4 +1,3 @@
-from typing import Iterable
 from uuid import UUID
 
 from flask import abort
@@ -33,10 +32,3 @@ def get_uuid(request, allow_empty: bool = False) -> str:
     except TypeError:
         abort(400, "Cannot find ID parameter of correct type (must appear once in query)")
     return value
-
-
-def any_non_nones(iterable: Iterable) -> bool:
-    for i in iterable:
-        if i is not None:
-            return True
-    return False

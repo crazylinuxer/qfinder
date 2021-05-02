@@ -11,3 +11,4 @@ Flask-JWT-Extended
 Werkzeug==1.0.1
 #injector~=0.18.4
 #APScheduler==3.6.3
+PyJWT~=2.1.0

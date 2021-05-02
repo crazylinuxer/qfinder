@@ -2,8 +2,8 @@ from werkzeug.datastructures import Headers
 from flask import request, Response
 
 from apis import cors_headers
-# from frontend_bindings.pages import bind_frontend_pages
-# from frontend_bindings.errors import bind_error_pages
+# from pages import bind_frontend_pages
+from pages.errors import bind_error_pages
 from repository import db
 from app_creator import app
 from apis import api
@@ -15,7 +15,7 @@ app.register_blueprint(api.blueprint, url_prefix='/api/v1')
 # app.config["MAX_CONTENT_PATH"] = app.config["MAX_CONTENT_LENGTH"] = 1024 * 1024 * 5
 
 # bind_frontend_pages(app)
-# bind_error_pages(app)
+bind_error_pages(app)
 
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(post_repository.archive_expired_posts, 'cron', hour=2, max_instances=1, replace_existing=True)
