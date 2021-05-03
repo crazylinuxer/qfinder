@@ -1,6 +1,6 @@
 from flask_restx.namespace import Namespace
-from flask import redirect
-from flask_jwt_extended import unset_refresh_cookies, set_refresh_cookies, get_jwt_identity
+from flask import redirect, make_response
+from flask_jwt_extended import unset_refresh_cookies, set_refresh_cookies, get_jwt_identity, unset_access_cookies
 
 from services import user_service
 from models.user_model import AuthModel, SignUpModel, AccountModel, AccountEditModel
@@ -52,7 +52,7 @@ class Auth(OptionsResource):
     @api.response(404, description="User not found")
     def post(self):
         """Log into an account"""
-        response = redirect("/")
+        response = make_response('null', 200)
         access_token, refresh_token = user_service.auth_user(**api.payload)
         set_refresh_cookies(response, refresh_token)
         return response
@@ -65,8 +65,11 @@ class LogOut(OptionsResource):
     @api.response(200, description="Logout successful")
     def post(self):
         """Logout from the account"""
-        response = redirect("/")
-        unset_refresh_cookies(response)
+        response = make_response('null', 200)
+        if get_jwt_identity():
+            unset_refresh_cookies(response)
+        else:
+            unset_access_cookies(response)
         return response
 
 

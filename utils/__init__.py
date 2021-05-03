@@ -1,9 +1,10 @@
 from typing import Iterable
 
-from flask import Flask, redirect, make_response, request
+from flask import Flask, make_response, jsonify
 from flask_restx import Namespace, Resource
 from jwt.exceptions import ExpiredSignatureError
-from flask_jwt_extended import (create_access_token, create_refresh_token, unset_jwt_cookies, unset_access_cookies,
+from flask_jwt_extended.exceptions import NoAuthorizationError, InvalidHeaderError
+from flask_jwt_extended import (create_access_token, create_refresh_token, unset_access_cookies,
                                 get_jwt_identity, set_access_cookies, verify_jwt_in_request,
                                 set_refresh_cookies, get_jwt)
 
@@ -36,45 +37,36 @@ def uses_jwt(optional=False):
             (set_refresh_cookies if refresh else set_access_cookies)(result, token)
             return result
 
-        def remove_jwt_cookie(result):
+        def remove_jwt_cookie(result, unset_func):
             if isinstance(result, tuple):
                 if result[0] is None:
                     result = 'null', *(result[1:])
                 result = make_response(*result)
-                unset_access_cookies(result)
+                unset_func(result)
             else:
-                unset_access_cookies(result)
+                unset_func(result)
             return result
 
         def jwt_wrapper(*args, **kwargs):
+            access_token_data = refresh_token_data = None
             try:
-                verify_jwt_in_request(optional=True)
-                without_access_token = get_jwt().get("type") != 'access'
-                verify_jwt_in_request(refresh=True, optional=optional)
-                without_refresh_token = get_jwt().get("type") != 'refresh'
-                if without_refresh_token and not optional:
-                    return remove_jwt_cookie(redirect('/'))
-                result = function(*args, **kwargs)
-                if without_access_token and not optional:
-                    return renew_jwt_cookie(result)
-                else:
-                    if without_refresh_token:
-                        return unset_access_cookies(result)
-                    return renew_jwt_cookie(result, refresh=True)
-            except ExpiredSignatureError:
-                try:
-                    verify_jwt_in_request(refresh=True, optional=optional)
-                    identity = get_jwt_identity()
-                    if not identity and not optional:
-                        return remove_jwt_cookie(redirect('/'))
-                    result = function(*args, **kwargs)
-                    if identity:
-                        return renew_jwt_cookie(result)
-                    return remove_jwt_cookie(result)
-                except ExpiredSignatureError:
-                    result = redirect('/')
-                    unset_jwt_cookies(result)
-                    return result
+                verify_jwt_in_request(optional=optional)
+                access_token_data = get_jwt()
+            except (ExpiredSignatureError, NoAuthorizationError, InvalidHeaderError):
+                pass
+            try:
+                verify_jwt_in_request(optional=optional, refresh=True)
+                refresh_token_data = get_jwt()
+            except (ExpiredSignatureError, NoAuthorizationError, InvalidHeaderError):
+                pass
+            if not refresh_token_data:
+                if optional:
+                    return remove_jwt_cookie(function(*args, **kwargs), unset_access_cookies)
+                return remove_jwt_cookie(make_response(jsonify(message="Invalid token"), 401), unset_access_cookies)
+            if not access_token_data:
+                return renew_jwt_cookie(function(*args, **kwargs))
+            return renew_jwt_cookie(function(*args, **kwargs), refresh=True)
+
         jwt_wrapper.__name__ = function.__name__
         jwt_wrapper.__doc__ = function.__doc__
         return jwt_wrapper
