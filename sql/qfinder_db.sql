@@ -97,11 +97,38 @@ CREATE TABLE public.goods (
     name text NOT NULL,
     description text NOT NULL,
     characteristics text NOT NULL,
-    type smallint NOT NULL
+    type uuid NOT NULL,
+    price integer NOT NULL
 );
 
 
 ALTER TABLE public.goods OWNER TO qfinder_user;
+
+--
+-- Name: goods_types; Type: TABLE; Schema: public; Owner: qfinder_user
+--
+
+CREATE TABLE public.goods_types (
+    id uuid DEFAULT public.uuid() NOT NULL,
+    name text NOT NULL,
+    picture text NOT NULL
+);
+
+
+ALTER TABLE public.goods_types OWNER TO qfinder_user;
+
+--
+-- Name: product_pictures; Type: TABLE; Schema: public; Owner: qfinder_user
+--
+
+CREATE TABLE public.product_pictures (
+    id uuid DEFAULT public.uuid() NOT NULL,
+    product_id uuid NOT NULL,
+    link text NOT NULL
+);
+
+
+ALTER TABLE public.product_pictures OWNER TO qfinder_user;
 
 --
 -- Name: roles; Type: TABLE; Schema: public; Owner: qfinder_user
@@ -154,21 +181,6 @@ CREATE TABLE public.users (
 
 
 ALTER TABLE public.users OWNER TO qfinder_user;
-
---
--- Name: views; Type: TABLE; Schema: public; Owner: qfinder_user
---
-
-CREATE TABLE public.views (
-    id uuid DEFAULT public.uuid() NOT NULL,
-    user_id uuid NOT NULL,
-    product_id uuid NOT NULL,
-    count smallint NOT NULL,
-    last_was_on timestamp without time zone DEFAULT timezone('utc'::text, now())
-);
-
-
-ALTER TABLE public.views OWNER TO qfinder_user;
 
 --
 -- Name: wishlist; Type: TABLE; Schema: public; Owner: qfinder_user
@@ -240,6 +252,30 @@ ALTER TABLE ONLY public.goods
 
 
 --
+-- Name: goods_types goods_types_name_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.goods_types
+    ADD CONSTRAINT goods_types_name_key UNIQUE (name);
+
+
+--
+-- Name: goods_types goods_types_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.goods_types
+    ADD CONSTRAINT goods_types_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_pictures product_pictures_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.product_pictures
+    ADD CONSTRAINT product_pictures_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: roles roles_name_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
 --
 
@@ -293,22 +329,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
-
-
---
--- Name: views views_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.views
-    ADD CONSTRAINT views_pkey PRIMARY KEY (id);
-
-
---
--- Name: views views_user_id_product_id_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.views
-    ADD CONSTRAINT views_user_id_product_id_key UNIQUE (user_id, product_id);
 
 
 --
@@ -376,6 +396,22 @@ ALTER TABLE ONLY public.feedback
 
 
 --
+-- Name: goods goods_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.goods
+    ADD CONSTRAINT goods_type_fkey FOREIGN KEY (type) REFERENCES public.goods_types(id);
+
+
+--
+-- Name: product_pictures product_pictures_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.product_pictures
+    ADD CONSTRAINT product_pictures_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.goods(id) ON DELETE CASCADE;
+
+
+--
 -- Name: tags_to_goods tags_to_goods_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
 --
 
@@ -389,22 +425,6 @@ ALTER TABLE ONLY public.tags_to_goods
 
 ALTER TABLE ONLY public.tags_to_goods
     ADD CONSTRAINT tags_to_goods_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES public.tags(id) ON DELETE CASCADE;
-
-
---
--- Name: views views_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.views
-    ADD CONSTRAINT views_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.goods(id) ON DELETE CASCADE;
-
-
---
--- Name: views views_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.views
-    ADD CONSTRAINT views_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
 --

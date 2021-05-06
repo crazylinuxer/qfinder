@@ -1,6 +1,9 @@
-from flask_restx import fields
+from flask_restx import fields, Namespace
 
 from . import create_email_field, ModelCreator, PASSWORD_EXAMPLE, create_id_field
+
+
+api = Namespace("user", "User account actions")
 
 
 class UserIdModel(ModelCreator):
@@ -58,3 +61,24 @@ class AccountEditModel(EmailModel, NameModel):
 
 class AccountModel(EmailModel, NameModel, UserIdModel):
     pass
+
+
+auth = api.model(
+    'auth_model',
+    AuthModel(),
+)
+
+sign_up = api.model(
+    'sign_up_model',
+    SignUpModel()
+)
+
+account_model = api.model(
+    'account_model',
+    AccountModel()
+)
+
+account_edit_model = api.model(
+    'account_edit_model',
+    AccountEditModel()
+)

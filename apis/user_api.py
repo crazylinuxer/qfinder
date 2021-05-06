@@ -1,33 +1,9 @@
-from flask_restx.namespace import Namespace
-from flask import redirect, make_response
+from flask import make_response
 from flask_jwt_extended import unset_refresh_cookies, set_refresh_cookies, get_jwt_identity, unset_access_cookies
 
 from services import user_service
-from models.user_model import AuthModel, SignUpModel, AccountModel, AccountEditModel
+from models.user_model import api, auth, account_model, account_edit_model, sign_up
 from utils import uses_jwt, OptionsResource
-
-api = Namespace("user", "User account actions")
-
-
-auth = api.model(
-    'auth_model',
-    AuthModel(),
-)
-
-sign_up = api.model(
-    'sign_up_model',
-    SignUpModel()
-)
-
-account_model = api.model(
-    'account_model',
-    AccountModel()
-)
-
-account_edit_model = api.model(
-    'account_edit_model',
-    AccountEditModel()
-)
 
 
 @api.route('/signup')

@@ -13,7 +13,7 @@ DATETIME_FORMAT = "iso8601"  # was 'rfc822' in example
 
 
 class ModelCreator:
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args, **kwargs) -> dict:
         result = {}
         raw_result = dir(cls)
         for item in raw_result:

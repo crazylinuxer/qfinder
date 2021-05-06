@@ -1,7 +1,7 @@
 {
     "SWAGGER_UI_DOC_EXPANSION": "list",
     "RESTX_VALIDATE": true,
-    "SQLALCHEMY_ECHO": false,
+    "SQLALCHEMY_ECHO": true,
     "SQLALCHEMY_TRACK_MODIFICATIONS": false,
     "RESTX_MASK_SWAGGER": false,
     "JWT_CSRF_METHODS": [],

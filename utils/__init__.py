@@ -69,6 +69,7 @@ def uses_jwt(optional=False):
 
         jwt_wrapper.__name__ = function.__name__
         jwt_wrapper.__doc__ = function.__doc__
+        jwt_wrapper.__apidoc__ = function.__apidoc__
         return jwt_wrapper
     return jwt_usage_decorator
 
