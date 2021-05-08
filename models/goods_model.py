@@ -65,13 +65,36 @@ class ProductNamePriceModel(ProductIdModel):
     )
 
 
-class ShortProductModel(ProductNamePriceModel):
-    picture = PictureModel.link
+class FeedbackShortModel(ModelCreator):
+    body = fields.String(
+        required=True,
+        description='Text of the comment',
+        example='Good product, I can recommend it!',
+        min_length=2,
+        max_length=1024
+    )
+    stars = fields.Integer(
+        required=True,
+        description='Number of stars left by user',
+        example=4,
+        min=0,
+        max=5
+    )
 
 
-short_product = api.model(
-    'short_product_model',
-    ShortProductModel()
+class FeedbackModel(FeedbackShortModel):
+    user_name = first_name = fields.String(
+        required=True,
+        description='User`s name',
+        example='Ivan Ivanov',
+        min_length=5,
+        max_length=130
+    )
+
+
+feedback = api.model(
+    'feedback_model',
+    FeedbackModel()
 )
 
 
@@ -98,22 +121,39 @@ class ProductModel(ProductNamePriceModel):
             required=True
         )
     )
-
-
-class CartModel(ModelCreator):
-    content = fields.List(
+    feedback = fields.List(
         fields.Nested(
-            short_product,
+            feedback,
             required=True
         )
     )
-    total_price = fields.Integer(
-        required=True,
-        description="Total price of a cart",
-        example=256,
-        min=1,
+    stars_avg = fields.Float(
+        required=False,
+        description='Average number of stars left by users',
+        example=4.5,
+        min=0,
+        max=5
     )
 
+
+class TagModel(ModelCreator):
+    id = create_id_field(
+        required=True,
+        description="Tag ID in database"
+    )
+    title = fields.String(
+        required=True,
+        description='Tag name',
+        example='High performance',
+        min_length=2,
+        max_length=48
+    )
+
+
+tag = api.model(
+    'tag_model',
+    TagModel()
+)
 
 product = api.model(
     'product_model',
@@ -123,9 +163,4 @@ product = api.model(
 product_id = api.model(
     'product_id_model',
     ProductIdModel()
-)
-
-cart = api.model(
-    'cart_model',
-    CartModel()
 )

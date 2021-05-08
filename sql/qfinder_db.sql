@@ -80,7 +80,6 @@ CREATE TABLE public.feedback (
     id uuid DEFAULT public.uuid() NOT NULL,
     user_id uuid NOT NULL,
     product_id uuid NOT NULL,
-    title text NOT NULL,
     body text NOT NULL,
     stars smallint NOT NULL
 );

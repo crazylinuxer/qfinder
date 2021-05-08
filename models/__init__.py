@@ -80,12 +80,6 @@ def required_query_params(request_args: Dict[str, str or Dict[str, str]]) -> Dic
     return result
 
 
-def update_dict(dict1: dict or ModelCreator, dict2: dict or ModelCreator) -> dict:
-    result = dict1.copy()
-    result.update(dict2)
-    return result
-
-
 def iterate_query_param(param_value: str) -> Generator[str, None, None]:
     result_raw = param_value.replace(' ', '').strip(',').split(',')
     for item in result_raw:

@@ -35,15 +35,15 @@ class NameModel(ModelCreator):
         required=False,
         description='User`s first name',
         example='Ivan',
-        min_length=3,
-        max_length=32
+        min_length=2,
+        max_length=64
     )
     last_name = fields.String(
         required=False,
         description='User`s last name',
         example='Ivanov',
-        min_length=3,
-        max_length=32
+        min_length=2,
+        max_length=64
     )
 
 
