@@ -26,7 +26,11 @@ class ProductTags(OptionsResource):
 class ProductsByType(OptionsResource):
     @api.doc('get_products_by_type', params={
         **required_query_params({"type": "ID of the type"}),
-        **{"tags": "Tag IDs to include (all products will be included if this param is empty), separated by commas"}
+        "tags": "Tag IDs to include (all products will be included if this param is empty), separated by commas",
+        "min_price": {"type": int, "description": "Minimal price to show"},
+        "max_price": {"type": int, "description": "Maximal price to show"},
+        "min_stars": {"type": float, "description": "Minimum stars to show"},
+        "max_stars": {"type": float, "description": "Maximum stars to show"}
     })
     @api.response(404, description="Type or tag not found")
     @api.marshal_with(goods_short_product, as_list=True, code=200)
