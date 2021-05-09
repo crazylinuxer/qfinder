@@ -2,7 +2,7 @@ from flask import Blueprint, current_app
 from flask_restx import Api
 
 from .user_api import api as auth_api
-from .goods_api import api as goods_api
+from .products_api import api as products_api
 from .actions_api import api as actions_api
 
 
@@ -30,7 +30,7 @@ api = CustomApi(
 
 api.namespaces.clear()
 api.add_namespace(auth_api)
-api.add_namespace(goods_api)
+api.add_namespace(products_api)
 api.add_namespace(actions_api)
 
 

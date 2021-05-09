@@ -1,7 +1,7 @@
 from flask_restx import fields, Namespace
 
 from models import ModelCreator
-from models.goods_model import ProductNamePriceModel, PictureModel, ProductModel, FeedbackShortModel, api as goods_api
+from models.products_model import ProductNamePriceModel, PictureModel, ProductModel, FeedbackShortModel, api as products_api
 
 
 api = Namespace("actions", "Actions of user")
@@ -11,14 +11,14 @@ class ShortProductModel(ProductNamePriceModel):
     picture = PictureModel.link
 
 
-short_product = api.model(
-    'short_product_model',
+actions_short_product = api.model(
+    'actions_short_product_model',
     ShortProductModel()
 )
 
 
-goods_short_product = goods_api.model(
-    'goods_short_product_model',
+short_product = products_api.model(
+    'short_product_model',
     ShortProductModel()
 )
 
@@ -26,7 +26,7 @@ goods_short_product = goods_api.model(
 class CartModel(ModelCreator):
     content = fields.List(
         fields.Nested(
-            short_product,
+            actions_short_product,
             required=True
         )
     )

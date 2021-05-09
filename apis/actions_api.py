@@ -1,8 +1,8 @@
 from flask_jwt_extended import get_jwt_identity
 
-from models.actions_model import short_product, cart, feedback_action, api
+from models.actions_model import actions_short_product, cart, feedback_action, api
 from models import required_query_params
-from models.goods_model import product_id
+from models.products_model import product_id
 from utils import uses_jwt, OptionsResource
 
 
@@ -39,7 +39,7 @@ class Cart(OptionsResource):
 class Wishlist(OptionsResource):
     @api.doc('get_wishlist')
     @uses_jwt()
-    @api.marshal_with(short_product, as_list=True, code=200)
+    @api.marshal_with(actions_short_product, as_list=True, code=200)
     def get(self):
         """Get user's wishlist content"""
         return None, 200

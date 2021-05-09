@@ -89,35 +89,6 @@ CREATE TABLE public.feedback (
 ALTER TABLE public.feedback OWNER TO qfinder_user;
 
 --
--- Name: goods; Type: TABLE; Schema: public; Owner: qfinder_user
---
-
-CREATE TABLE public.goods (
-    id uuid DEFAULT public.uuid() NOT NULL,
-    name text NOT NULL,
-    description text NOT NULL,
-    characteristics json NOT NULL,
-    type uuid NOT NULL,
-    price integer NOT NULL
-);
-
-
-ALTER TABLE public.goods OWNER TO qfinder_user;
-
---
--- Name: goods_types; Type: TABLE; Schema: public; Owner: qfinder_user
---
-
-CREATE TABLE public.goods_types (
-    id uuid DEFAULT public.uuid() NOT NULL,
-    name text NOT NULL,
-    picture text NOT NULL
-);
-
-
-ALTER TABLE public.goods_types OWNER TO qfinder_user;
-
---
 -- Name: product_pictures; Type: TABLE; Schema: public; Owner: qfinder_user
 --
 
@@ -129,6 +100,35 @@ CREATE TABLE public.product_pictures (
 
 
 ALTER TABLE public.product_pictures OWNER TO qfinder_user;
+
+--
+-- Name: product_types; Type: TABLE; Schema: public; Owner: qfinder_user
+--
+
+CREATE TABLE public.product_types (
+    id uuid DEFAULT public.uuid() NOT NULL,
+    name text NOT NULL,
+    picture text NOT NULL
+);
+
+
+ALTER TABLE public.product_types OWNER TO qfinder_user;
+
+--
+-- Name: products; Type: TABLE; Schema: public; Owner: qfinder_user
+--
+
+CREATE TABLE public.products (
+    id uuid DEFAULT public.uuid() NOT NULL,
+    name text NOT NULL,
+    description text NOT NULL,
+    characteristics json NOT NULL,
+    type uuid NOT NULL,
+    price integer NOT NULL
+);
+
+
+ALTER TABLE public.products OWNER TO qfinder_user;
 
 --
 -- Name: roles; Type: TABLE; Schema: public; Owner: qfinder_user
@@ -156,16 +156,17 @@ CREATE TABLE public.tags (
 ALTER TABLE public.tags OWNER TO qfinder_user;
 
 --
--- Name: tags_to_goods; Type: TABLE; Schema: public; Owner: qfinder_user
+-- Name: tags_to_products; Type: TABLE; Schema: public; Owner: qfinder_user
 --
 
-CREATE TABLE public.tags_to_goods (
+CREATE TABLE public.tags_to_products (
+    id uuid DEFAULT public.uuid() NOT NULL,
     product_id uuid NOT NULL,
     tag_id uuid NOT NULL
 );
 
 
-ALTER TABLE public.tags_to_goods OWNER TO qfinder_user;
+ALTER TABLE public.tags_to_products OWNER TO qfinder_user;
 
 --
 -- Name: users; Type: TABLE; Schema: public; Owner: qfinder_user
@@ -236,43 +237,43 @@ ALTER TABLE ONLY public.feedback
 
 
 --
--- Name: goods goods_name_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.goods
-    ADD CONSTRAINT goods_name_key UNIQUE (name);
-
-
---
--- Name: goods goods_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.goods
-    ADD CONSTRAINT goods_pkey PRIMARY KEY (id);
-
-
---
--- Name: goods_types goods_types_name_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.goods_types
-    ADD CONSTRAINT goods_types_name_key UNIQUE (name);
-
-
---
--- Name: goods_types goods_types_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.goods_types
-    ADD CONSTRAINT goods_types_pkey PRIMARY KEY (id);
-
-
---
 -- Name: product_pictures product_pictures_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
 --
 
 ALTER TABLE ONLY public.product_pictures
     ADD CONSTRAINT product_pictures_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products products_name_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_name_key UNIQUE (name);
+
+
+--
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: product_types products_types_name_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.product_types
+    ADD CONSTRAINT products_types_name_key UNIQUE (name);
+
+
+--
+-- Name: product_types products_types_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.product_types
+    ADD CONSTRAINT products_types_pkey PRIMARY KEY (id);
 
 
 --
@@ -308,11 +309,19 @@ ALTER TABLE ONLY public.tags
 
 
 --
--- Name: tags_to_goods tags_to_goods_product_id_tag_id_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+-- Name: tags_to_products tags_to_products_pkey; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
 --
 
-ALTER TABLE ONLY public.tags_to_goods
-    ADD CONSTRAINT tags_to_goods_product_id_tag_id_key UNIQUE (product_id, tag_id);
+ALTER TABLE ONLY public.tags_to_products
+    ADD CONSTRAINT tags_to_products_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tags_to_products tags_to_products_product_id_tag_id_key; Type: CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.tags_to_products
+    ADD CONSTRAINT tags_to_products_product_id_tag_id_key UNIQUE (product_id, tag_id);
 
 
 --
@@ -368,7 +377,7 @@ ALTER TABLE ONLY public.admins_to_roles
 --
 
 ALTER TABLE ONLY public.cart_items
-    ADD CONSTRAINT cart_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.goods(id) ON DELETE CASCADE;
+    ADD CONSTRAINT cart_items_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id) ON DELETE CASCADE;
 
 
 --
@@ -384,7 +393,7 @@ ALTER TABLE ONLY public.cart_items
 --
 
 ALTER TABLE ONLY public.feedback
-    ADD CONSTRAINT feedback_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.goods(id) ON DELETE CASCADE;
+    ADD CONSTRAINT feedback_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id) ON DELETE CASCADE;
 
 
 --
@@ -396,35 +405,35 @@ ALTER TABLE ONLY public.feedback
 
 
 --
--- Name: goods goods_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
---
-
-ALTER TABLE ONLY public.goods
-    ADD CONSTRAINT goods_type_fkey FOREIGN KEY (type) REFERENCES public.goods_types(id);
-
-
---
 -- Name: product_pictures product_pictures_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
 --
 
 ALTER TABLE ONLY public.product_pictures
-    ADD CONSTRAINT product_pictures_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.goods(id) ON DELETE CASCADE;
+    ADD CONSTRAINT product_pictures_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id) ON DELETE CASCADE;
 
 
 --
--- Name: tags_to_goods tags_to_goods_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
+-- Name: products products_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
 --
 
-ALTER TABLE ONLY public.tags_to_goods
-    ADD CONSTRAINT tags_to_goods_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.goods(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_type_fkey FOREIGN KEY (type) REFERENCES public.product_types(id);
 
 
 --
--- Name: tags_to_goods tags_to_goods_tag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
+-- Name: tags_to_products tags_to_products_product_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
 --
 
-ALTER TABLE ONLY public.tags_to_goods
-    ADD CONSTRAINT tags_to_goods_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES public.tags(id) ON DELETE CASCADE;
+ALTER TABLE ONLY public.tags_to_products
+    ADD CONSTRAINT tags_to_products_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id) ON DELETE CASCADE;
+
+
+--
+-- Name: tags_to_products tags_to_products_tag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: qfinder_user
+--
+
+ALTER TABLE ONLY public.tags_to_products
+    ADD CONSTRAINT tags_to_products_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES public.tags(id) ON DELETE CASCADE;
 
 
 --
@@ -432,7 +441,7 @@ ALTER TABLE ONLY public.tags_to_goods
 --
 
 ALTER TABLE ONLY public.wishlist
-    ADD CONSTRAINT wishlist_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.goods(id) ON DELETE CASCADE;
+    ADD CONSTRAINT wishlist_product_id_fkey FOREIGN KEY (product_id) REFERENCES public.products(id) ON DELETE CASCADE;
 
 
 --

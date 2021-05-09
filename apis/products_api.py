@@ -1,5 +1,5 @@
-from models.goods_model import api, product, product_type, tag
-from models.actions_model import goods_short_product
+from models.products_model import api, product, product_type, tag
+from models.actions_model import short_product
 from models import required_query_params
 from utils import OptionsResource
 
@@ -33,7 +33,7 @@ class ProductsByType(OptionsResource):
         "max_stars": {"type": float, "description": "Maximum stars to show"}
     })
     @api.response(404, description="Type or tag not found")
-    @api.marshal_with(goods_short_product, as_list=True, code=200)
+    @api.marshal_with(short_product, as_list=True, code=200)
     def get(self):
         """Get all products of given type"""
         return None, 200
