@@ -3,7 +3,7 @@ from flask_restx import fields, Namespace
 from . import ModelCreator, create_id_field
 
 
-api = Namespace("goods", "Endpoints related to products")
+api = Namespace("products", "Endpoints related to products")
 
 
 class ProductIdModel(ModelCreator):
@@ -150,6 +150,37 @@ class TagModel(ModelCreator):
     )
 
 
+class TypeStatisticsModel(ModelCreator):
+    id = ProductTypeModel.id
+    name = ProductTypeModel.name
+    min_price = fields.Integer(
+        required=True,
+        description="Minimum price of a product of this type",
+        example=256,
+        min=1,
+    )
+    max_price = fields.Integer(
+        required=True,
+        description="Maximum price of a product of this type",
+        example=256,
+        min=1,
+    )
+    min_stars = fields.Integer(
+        required=True,
+        description='Minimum number of stars left by user for products of this type',
+        example=4,
+        min=0,
+        max=5
+    )
+    max_stars = fields.Integer(
+        required=True,
+        description='Maximum number of stars left by user for products of this type',
+        example=4,
+        min=0,
+        max=5
+    )
+
+
 tag = api.model(
     'tag_model',
     TagModel()
@@ -163,4 +194,9 @@ product = api.model(
 product_id = api.model(
     'product_id_model',
     ProductIdModel()
+)
+
+type_statistics = api.model(
+    'type_statistics_model',
+    TypeStatisticsModel()
 )

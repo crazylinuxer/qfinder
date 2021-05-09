@@ -1,4 +1,4 @@
-from models.products_model import api, product, product_type, tag
+from models.products_model import api, product, product_type, tag, type_statistics
 from models.actions_model import short_product
 from models import required_query_params
 from utils import OptionsResource
@@ -19,6 +19,16 @@ class ProductTags(OptionsResource):
     @api.marshal_with(tag, as_list=True, code=200)
     def get(self):
         """Get all tags"""
+        return None, 200
+
+
+@api.route('/type_stat')
+class ProductTypeStat(OptionsResource):
+    @api.doc('get_product_type_stat', params=required_query_params({"type": "ID of the type"}))
+    @api.marshal_with(type_statistics, code=200)
+    @api.response(404, description="Type not found")
+    def get(self):
+        """Get statistics of the given type such as min/max stars and min/max price"""
         return None, 200
 
 
