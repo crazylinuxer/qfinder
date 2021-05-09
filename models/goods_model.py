@@ -71,7 +71,7 @@ class FeedbackShortModel(ModelCreator):
         description='Text of the comment',
         example='Good product, I can recommend it!',
         min_length=2,
-        max_length=1024
+        max_length=4096
     )
     stars = fields.Integer(
         required=True,
@@ -104,7 +104,7 @@ class ProductModel(ProductNamePriceModel):
         description='Product description',
         example='Very good processor',
         min_length=0,
-        max_length=1024
+        max_length=2048
     )
     characteristics = fields.Raw(
         {},

@@ -81,7 +81,8 @@ CREATE TABLE public.feedback (
     user_id uuid NOT NULL,
     product_id uuid NOT NULL,
     body text NOT NULL,
-    stars smallint NOT NULL
+    stars smallint NOT NULL,
+    CONSTRAINT feedback_stars_check CHECK (((stars <= 5) AND (stars >= 0)))
 );
 
 
@@ -95,7 +96,7 @@ CREATE TABLE public.goods (
     id uuid DEFAULT public.uuid() NOT NULL,
     name text NOT NULL,
     description text NOT NULL,
-    characteristics text NOT NULL,
+    characteristics json NOT NULL,
     type uuid NOT NULL,
     price integer NOT NULL
 );
