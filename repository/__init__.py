@@ -5,10 +5,13 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm.state import InstanceState
-from sqlalchemy import (inspect, Column, String, SmallInteger,
+from sqlalchemy import (inspect, Column, String, SmallInteger, UniqueConstraint,
                         CheckConstraint, ForeignKey, JSON, Integer)
 
 from app_creator import app
+
+
+MAX_FIELD_LENGTH = 64
 
 
 db = SQLAlchemy(app)
@@ -28,6 +31,12 @@ class ImprovedBase:
 class User(Base, ImprovedBase):
     __tablename__ = 'users'
 
+    def __repr__(self):
+        full_name = f'{self.first_name} {self.last_name}'
+        if len(full_name) > MAX_FIELD_LENGTH:
+            return full_name[:MAX_FIELD_LENGTH] + '…'
+        return full_name
+
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     first_name = Column(String(512), nullable=False)
     last_name = Column(String(512), nullable=False)
@@ -42,6 +51,11 @@ class User(Base, ImprovedBase):
 class Product(Base, ImprovedBase):
     __tablename__ = 'products'
 
+    def __repr__(self):
+        if len(self.name) > MAX_FIELD_LENGTH:
+            return self.name[:MAX_FIELD_LENGTH] + '…'
+        return self.name
+
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(128), nullable=False, unique=True)
     description = Column(String(2048), nullable=False, unique=True)
@@ -51,7 +65,7 @@ class Product(Base, ImprovedBase):
 
     type_ref = relationship("ProductType", back_populates='products', foreign_keys=[type])
 
-    tags = relationship("TagToProduct", back_populates='product_ref')  # , primaryjoin="TagToProduct.product_id == Product.id")
+    tags = relationship("TagToProduct", back_populates='product_ref', primaryjoin="TagToProduct.product_id == Product.id")
     feedback = relationship("Feedback", back_populates='product_ref', primaryjoin="Feedback.product_id == Product.id")
     cart_occurrences = relationship("CartItem", back_populates='product_ref', primaryjoin="CartItem.product_id == Product.id")
     wishlist_occurrences = relationship("WishListItem", back_populates='product_ref',
@@ -63,6 +77,11 @@ class Product(Base, ImprovedBase):
 class ProductType(Base, ImprovedBase):
     __tablename__ = 'product_types'
 
+    def __repr__(self):
+        if len(self.name) > MAX_FIELD_LENGTH:
+            return self.name[:MAX_FIELD_LENGTH] + '…'
+        return self.name
+
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(128), nullable=False, unique=True)
     picture = Column(String(1024), nullable=False)
@@ -73,14 +92,25 @@ class ProductType(Base, ImprovedBase):
 class Tag(Base, ImprovedBase):
     __tablename__ = 'tags'
 
+    def __repr__(self):
+        if len(self.title) > MAX_FIELD_LENGTH:
+            return self.title[:MAX_FIELD_LENGTH] + '…'
+        return self.title
+
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     title = Column(String(128), nullable=False, unique=True)
 
-    products = relationship("TagToProduct", back_populates='tag_ref')  # , primaryjoin="Tag.id == TagToProduct.product_id")
+    products = relationship("TagToProduct", back_populates='tag_ref', primaryjoin="Tag.id == TagToProduct.tag_id")
 
 
 class TagToProduct(Base, ImprovedBase):
     __tablename__ = 'tags_to_products'
+
+    def __repr__(self):
+        result = f'{self.tag_ref.title} to {self.product_ref.name}'
+        if len(result) > MAX_FIELD_LENGTH:
+            return result[:MAX_FIELD_LENGTH] + '…'
+        return result
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
@@ -93,6 +123,12 @@ class TagToProduct(Base, ImprovedBase):
 class ProductPicture(Base, ImprovedBase):
     __tablename__ = 'product_pictures'
 
+    def __repr__(self):
+        result = f'{self.product_ref.name}: {self.link}'
+        if len(result) > MAX_FIELD_LENGTH:
+            return result[:MAX_FIELD_LENGTH] + '…'
+        return result
+
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
     link = Column(String(1024), nullable=False)
@@ -103,9 +139,17 @@ class ProductPicture(Base, ImprovedBase):
 class CartItem(Base, ImprovedBase):
     __tablename__ = 'cart_items'
 
+    def __repr__(self):
+        result = f'{self.user_ref.first_name} {self.user_ref.last_name}`s {self.product_ref.name}'
+        if len(result) > MAX_FIELD_LENGTH:
+            return result[:MAX_FIELD_LENGTH] + '…'
+        return result
+
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
-    product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False, unique=True)
+    product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
     user_id = Column(UUID(), ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+
+    cart_items_user_id_product_id_key = UniqueConstraint('product_id', 'user_id', name='cart_items_user_id_product_id_key')
 
     product_ref = relationship("Product", back_populates='cart_occurrences', foreign_keys=[product_id])
     user_ref = relationship("User", back_populates='cart', foreign_keys=[user_id])
@@ -114,9 +158,17 @@ class CartItem(Base, ImprovedBase):
 class WishListItem(Base, ImprovedBase):
     __tablename__ = 'wishlist'
 
+    def __repr__(self):
+        result = f'{self.user_ref.first_name} {self.user_ref.last_name}`s {self.product_ref.name}'
+        if len(result) > MAX_FIELD_LENGTH:
+            return result[:MAX_FIELD_LENGTH] + '…'
+        return result
+
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
-    product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False, unique=True)
+    product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
     user_id = Column(UUID(), ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+
+    wishlist_user_id_product_id_key = UniqueConstraint('product_id', 'user_id', name='wishlist_user_id_product_id_key')
 
     product_ref = relationship("Product", back_populates='wishlist_occurrences', foreign_keys=[product_id])
     user_ref = relationship("User", back_populates='wishlist', foreign_keys=[user_id])
@@ -124,6 +176,16 @@ class WishListItem(Base, ImprovedBase):
 
 class Feedback(Base, ImprovedBase):
     __tablename__ = 'feedback'
+
+    def __repr__(self):
+        prod_name = self.product_ref.name
+        prod_name = prod_name[:8] + '…' if len(prod_name) > 8 else prod_name
+        user_name = self.user_ref.__repr__()
+        user_name = user_name[:12] + '…' if len(user_name) > 12 else user_name
+        result = f'({prod_name}) {user_name}: {self.stars}, {self.body}'
+        if len(result) > MAX_FIELD_LENGTH:
+            return result[:MAX_FIELD_LENGTH] + '…'
+        return result
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
