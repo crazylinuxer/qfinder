@@ -6,6 +6,7 @@ from apis import cors_headers
 from pages.errors import bind_error_pages
 from repository import db
 from app_creator import app
+from app_creator.admin import create_admin_page
 from apis import api
 
 
@@ -16,6 +17,7 @@ app.register_blueprint(api.blueprint, url_prefix='/api/v1')
 
 # bind_frontend_pages(app)
 bind_error_pages(app)
+create_admin_page(app)
 
 # scheduler = BackgroundScheduler()
 # scheduler.add_job(post_repository.archive_expired_posts, 'cron', hour=2, max_instances=1, replace_existing=True)

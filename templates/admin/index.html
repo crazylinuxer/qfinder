@@ -1,0 +1,11 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+{% if not current_user.is_authenticated %}
+    <script>window.location.href = "/admin/login";</script>
+{% endif %}
+
+<a href="/admin/logout">Logout</a>
+
+{% endblock %}
