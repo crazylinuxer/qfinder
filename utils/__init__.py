@@ -1,6 +1,7 @@
 from typing import Iterable
+from uuid import UUID
 
-from flask import Flask, make_response, jsonify
+from flask import Flask, make_response, jsonify, request, abort
 from flask_restx import Namespace, Resource
 from jwt.exceptions import ExpiredSignatureError
 from flask_jwt_extended.exceptions import NoAuthorizationError, InvalidHeaderError
@@ -81,3 +82,19 @@ class OptionsResource(Resource):
     @api.hide
     def options(self):
         return None, 200
+
+
+def get_uuid(param_name, allow_empty: bool = False) -> str:
+    if isinstance(request, str):
+        value = request
+    else:
+        value = request.args.get(param_name, '')
+    if not value and allow_empty:
+        return value
+    try:
+        UUID(value)
+    except ValueError:
+        abort(400, f"Incorrect '{param_name}' parameter (must match UUID v4)")
+    except TypeError:
+        abort(400, f"Cannot find '{param_name}' parameter of correct type (must appear once in query)")
+    return value

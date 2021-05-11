@@ -2,6 +2,7 @@ from models.products_model import api, product, product_type, tag, type_statisti
 from models.actions_model import short_product
 from models import required_query_params
 from utils import OptionsResource
+from services import products_service
 
 
 @api.route('/types')

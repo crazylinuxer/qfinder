@@ -33,7 +33,7 @@ def add_to_wishlist(user_id: str, product_id: str, **_) -> None:
     actions_repository.add_item(item)
 
 
-def get_wishlist_content(user_id: str, **_) -> List[Dict[str: Union[str, int]]]:
+def get_wishlist_content(user_id: str, **_) -> List[Dict[str, Union[str, int]]]:
     wishlist = actions_repository.get_wishlist_content(user_id)
     return [{**product.as_dict, "picture": product.pictures.link} for product in wishlist]  # todo check for sanity
 
