@@ -1,7 +1,9 @@
+from flask import request
+
 from models.products_model import api, product, product_type, tag, type_statistics
 from models.actions_model import short_product
-from models import required_query_params
-from utils import OptionsResource
+from models import required_query_params, query_param_to_set
+from utils import OptionsResource, get_uuid
 from services import products_service
 
 
@@ -11,7 +13,7 @@ class ProductTypes(OptionsResource):
     @api.marshal_with(product_type, as_list=True, code=200)
     def get(self):
         """Get all product types"""
-        return None, 200
+        return products_service.get_product_types(), 200
 
 
 @api.route('/tags')
@@ -20,7 +22,7 @@ class ProductTags(OptionsResource):
     @api.marshal_with(tag, as_list=True, code=200)
     def get(self):
         """Get all tags"""
-        return None, 200
+        return products_service.get_tags(), 200
 
 
 @api.route('/type_stat')
@@ -30,7 +32,7 @@ class ProductTypeStat(OptionsResource):
     @api.response(404, description="Type not found")
     def get(self):
         """Get statistics of the given type such as min/max stars and min/max price"""
-        return None, 200
+        return products_service.get_product_type_stat(get_uuid("type")), 200
 
 
 @api.route('/by_type')
@@ -47,7 +49,14 @@ class ProductsByType(OptionsResource):
     @api.marshal_with(short_product, as_list=True, code=200)
     def get(self):
         """Get all products of given type"""
-        return None, 200
+        return products_service.get_products_by_type(
+            get_uuid("type"),
+            query_param_to_set("tags"),
+            request.args.get("min_price"),
+            request.args.get("max_price"),
+            request.args.get("min_stars"),
+            request.args.get("max_stars")
+        ), 200
 
 
 @api.route('/info')
@@ -57,4 +66,4 @@ class ProductInfo(OptionsResource):
     @api.marshal_with(product, code=200)
     def get(self):
         """Get product info"""
-        return None, 200
+        return products_service.get_product_info(get_uuid("product")), 200
