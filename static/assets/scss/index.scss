@@ -760,3 +760,39 @@ body {
         }
     }
 }
+
+.popup {
+    position: absolute;
+    width: 300px;
+    left: calc(50% - 300px / 2);
+    top: auto;
+    bottom: auto;
+    
+    padding: 20px;
+    box-sizing: border-box;
+
+    a {
+        
+        border-radius: 6px;
+        color: #fff;
+        font-size: 18px;
+        text-decoration: none;
+        padding: 5px 20px;
+    }
+
+    &.success {
+        background: #cec;
+
+        a {
+            background: #46d888;
+        }
+    }
+
+    &.error {
+        background: rgb(255, 159, 129);
+
+        a {
+            background: #ff6b7e;
+        }
+    }
+}

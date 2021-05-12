@@ -621,4 +621,33 @@ body {
   cursor: pointer;
 }
 
+.popup {
+  position: absolute;
+  width: 300px;
+  left: calc(50% - 300px / 2);
+  top: auto;
+  bottom: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+.popup a {
+  border-radius: 6px;
+  color: #fff;
+  font-size: 18px;
+  text-decoration: none;
+  padding: 5px 20px;
+}
+.popup.success {
+  background: #cec;
+}
+.popup.success a {
+  background: #46d888;
+}
+.popup.error {
+  background: #ff9f81;
+}
+.popup.error a {
+  background: #ff6b7e;
+}
+
 /*# sourceMappingURL=index.css.map */
