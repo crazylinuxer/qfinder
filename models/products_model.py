@@ -29,11 +29,12 @@ picture = api.model(
 )
 
 
-class ProductTypeModel(PictureModel):
+class ProductTypeModel(ModelCreator):
     id = create_id_field(
         required=True,
         description="Product type ID in database"
     )
+    picture = PictureModel.link
     name = fields.String(
         required=True,
         description='Product type name',
@@ -83,7 +84,7 @@ class FeedbackShortModel(ModelCreator):
 
 
 class FeedbackModel(FeedbackShortModel):
-    user_name = first_name = fields.String(
+    user_name = fields.String(
         required=True,
         description='User`s name',
         example='Ivan Ivanov',

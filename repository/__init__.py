@@ -34,8 +34,8 @@ class User(Base, ImprovedBase):
     def __repr__(self):
         full_name = f'{self.first_name} {self.last_name}'
         if len(full_name) > MAX_FIELD_LENGTH:
-            return full_name[:MAX_FIELD_LENGTH] + '…'
-        return full_name
+            return f"<{full_name[:MAX_FIELD_LENGTH]}…>"
+        return f"<{full_name}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     first_name = Column(String(512), nullable=False)
@@ -53,8 +53,8 @@ class Product(Base, ImprovedBase):
 
     def __repr__(self):
         if len(self.name) > MAX_FIELD_LENGTH:
-            return self.name[:MAX_FIELD_LENGTH] + '…'
-        return self.name
+            return f"<{self.name[:MAX_FIELD_LENGTH]}…>"
+        return f"<{self.name}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(128), nullable=False, unique=True)
@@ -79,8 +79,8 @@ class ProductType(Base, ImprovedBase):
 
     def __repr__(self):
         if len(self.name) > MAX_FIELD_LENGTH:
-            return self.name[:MAX_FIELD_LENGTH] + '…'
-        return self.name
+            return f"<{self.name[:MAX_FIELD_LENGTH]}…>"
+        return f"<{self.name}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(128), nullable=False, unique=True)
@@ -94,8 +94,8 @@ class Tag(Base, ImprovedBase):
 
     def __repr__(self):
         if len(self.title) > MAX_FIELD_LENGTH:
-            return self.title[:MAX_FIELD_LENGTH] + '…'
-        return self.title
+            return f"<{self.title[:MAX_FIELD_LENGTH]}…>"
+        return f"<{self.title}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     title = Column(String(128), nullable=False, unique=True)
@@ -109,8 +109,8 @@ class TagToProduct(Base, ImprovedBase):
     def __repr__(self):
         result = f'{self.tag_ref.title} to {self.product_ref.name}'
         if len(result) > MAX_FIELD_LENGTH:
-            return result[:MAX_FIELD_LENGTH] + '…'
-        return result
+            return f"<{result[:MAX_FIELD_LENGTH]}…>"
+        return f"<{result}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
@@ -126,8 +126,8 @@ class ProductPicture(Base, ImprovedBase):
     def __repr__(self):
         result = f'{self.product_ref.name}: {self.link}'
         if len(result) > MAX_FIELD_LENGTH:
-            return result[:MAX_FIELD_LENGTH] + '…'
-        return result
+            return f"<{result[:MAX_FIELD_LENGTH]}…>"
+        return f"<{result}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
@@ -142,8 +142,8 @@ class CartItem(Base, ImprovedBase):
     def __repr__(self):
         result = f'{self.user_ref.first_name} {self.user_ref.last_name}`s {self.product_ref.name}'
         if len(result) > MAX_FIELD_LENGTH:
-            return result[:MAX_FIELD_LENGTH] + '…'
-        return result
+            return f"<{result[:MAX_FIELD_LENGTH]}…>"
+        return f"<{result}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
@@ -161,8 +161,8 @@ class WishListItem(Base, ImprovedBase):
     def __repr__(self):
         result = f'{self.user_ref.first_name} {self.user_ref.last_name}`s {self.product_ref.name}'
         if len(result) > MAX_FIELD_LENGTH:
-            return result[:MAX_FIELD_LENGTH] + '…'
-        return result
+            return f"<{result[:MAX_FIELD_LENGTH]}…>"
+        return f"<{result}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
@@ -184,8 +184,8 @@ class Feedback(Base, ImprovedBase):
         user_name = user_name[:12] + '…' if len(user_name) > 12 else user_name
         result = f'({prod_name}) {user_name}: {self.stars}, {self.body}'
         if len(result) > MAX_FIELD_LENGTH:
-            return result[:MAX_FIELD_LENGTH] + '…'
-        return result
+            return f"<{result[:MAX_FIELD_LENGTH]}…>"
+        return f"<{result}>"
 
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     product_id = Column(UUID(), ForeignKey('products.id', ondelete='CASCADE'), nullable=False)
