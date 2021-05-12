@@ -1,4 +1,4 @@
-from flask_jwt_extended import get_jwt_identity, jwt_required
+from flask_jwt_extended import get_jwt_identity, jwt_required, create_refresh_token, create_access_token
 
 from services import user_service
 from models.user_model import api, auth, account_model, account_edit_model, sign_up, token
@@ -28,6 +28,21 @@ class Auth(OptionsResource):
     def post(self):
         """Log into an account"""
         return user_service.auth_user(**api.payload)
+
+
+@api.route('/auth/refresh')
+class AuthRefresh(OptionsResource):
+    @api.doc('employee_auth_refresh', security='apikey')
+    @api.marshal_with(token, code=200)
+    @jwt_required(refresh=True)
+    def post(self):
+        """Refresh pair of tokens"""
+        identity = get_jwt_identity()
+        return {
+               'access_token': create_access_token(identity=identity),
+               'refresh_token': create_refresh_token(identity=identity),
+               'user_id': identity
+        }, 200
 
 
 @api.route('')
