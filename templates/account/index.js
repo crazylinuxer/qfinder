@@ -1,5 +1,7 @@
 const isLogged = JSON.parse(sessionStorage.getItem('user')) || null;
 
+const cng = document.querySelector('.changed');
+
 window.addEventListener('DOMContentLoaded', () => {
     if (isLogged) {
         const firstName = document.querySelector('.f_name div p');
@@ -49,6 +51,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 Server.updateAccoutInfo(data)
                 Server.getUserInfo();
+                cng.classList.add('active');
+
+                setTimeout(() => cng.classList.remove('active'), 1000)
             }
         })
     }
