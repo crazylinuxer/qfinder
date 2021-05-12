@@ -452,4 +452,173 @@ body {
   margin: 0;
 }
 
+.cartMain {
+  padding: 13px;
+}
+.cartMain .wrapper, .cartMain .main__wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.cartMain__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: #EEEEEE;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  padding: 24px 60px 24px 24px;
+  box-sizing: border-box;
+  justify-content: space-between;
+}
+.cartMain__item-img {
+  width: 20%;
+}
+.cartMain__item-img img {
+  width: 100%;
+}
+.cartMain__item-price {
+  color: #1C9854;
+  font-weight: 700;
+}
+.cartMain__item-right {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 75%;
+}
+.cartMain__item-right > div:nth-child(1) {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.cartMain__item-right > div:nth-child(1) a {
+  text-decoration: none;
+  color: #000;
+  font-size: 18px;
+  font-weight: 700;
+}
+.cartMain__item-right > div:nth-child(2) {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+  margin-left: auto;
+}
+.cartMain__item-right > div:nth-child(2) a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #1C9854;
+  font-size: 18px;
+  font-weight: 700;
+  transition: 0.2s transform;
+}
+.cartMain__item-right > div:nth-child(2) a:hover {
+  transform: translateY(-2px);
+}
+.cartMain__item-right > div:nth-child(2) a img {
+  margin-right: 6px;
+}
+.cartMain__total {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 30px 0;
+}
+.cartMain__total p {
+  margin-right: 24px;
+  font-weight: 700;
+}
+.cartMain__total a {
+  border: 2px solid #1C9854;
+  box-sizing: border-box;
+  border-radius: 12px;
+  padding: 8px 15px;
+  display: flex;
+  justify-content: space-between;
+  min-width: 120px;
+  text-decoration: none;
+  font-weight: 700;
+  color: #1C9854;
+}
+
+.accountMain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.accountMain form {
+  display: flex;
+  flex-direction: column;
+}
+.accountMain form > div {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+.accountMain form > div > p {
+  margin-right: 25px;
+}
+.accountMain form > div div {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.accountMain form > div div p {
+  margin: 4px 0 0 0;
+}
+.accountMain form > div div:before {
+  content: "";
+  display: block;
+  width: 24px;
+  height: 24px;
+  background-image: url(../images/edit.png);
+}
+.accountMain form button {
+  align-self: center;
+  width: 160px;
+  height: 48px;
+  border: 0;
+  outline: 0;
+  background: #1C9854;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 16px;
+  margin-top: 40px;
+  cursor: pointer;
+}
+
+.loginMain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loginMain form {
+  display: flex;
+  flex-direction: column;
+}
+.loginMain form input {
+  padding: 6px 14px;
+  background: #EEEEEE;
+  border: 2px solid #1C9854;
+  box-sizing: border-box;
+  border-radius: 12px;
+  font-size: 18px;
+  margin-bottom: 19px;
+}
+.loginMain form button {
+  align-self: center;
+  width: 160px;
+  height: 48px;
+  border: 0;
+  outline: 0;
+  background: #1C9854;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 16px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=index.css.map */

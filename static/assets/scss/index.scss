@@ -561,3 +561,202 @@ body {
         }
     }
 }
+
+.cartMain {
+    padding: 13px;
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        background: #EEEEEE;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 8px;
+        padding: 24px 60px 24px 24px;
+        box-sizing: border-box;
+        justify-content: space-between;
+        
+        &-img {
+            width: 20%;
+            img {
+                width: 100%;
+            }
+        }
+
+        &-price {
+            color: #1C9854;
+            font-weight: 700;
+        }
+
+        &-right {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 75%;
+
+            // aifs
+
+            > div:nth-child(1) {
+                margin-top: auto;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                
+                a {
+                    text-decoration: none;
+                    color: #000;
+                    font-size: 18px;
+                    font-weight: 700;
+                }
+            }
+
+            > div:nth-child(2) {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 60%;
+                margin-left: auto;
+
+                a {
+                    display: flex;
+                    align-items: center;
+                    text-decoration: none;
+                    color: #1C9854;
+                    font-size: 18px;
+                    font-weight: 700;
+                    transition: .2s transform;
+
+                    &:hover {
+                        transform: translateY(-2px)
+                    }
+
+                    img {
+                        margin-right: 6px;
+                    }
+                }
+            }
+        } 
+    }
+
+    &__total {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin: 30px 0;
+
+        p {
+            margin-right: 24px;
+            font-weight: 700;
+        }
+
+        a {
+            border: 2px solid #1C9854;
+            box-sizing: border-box;
+            border-radius: 12px;
+            padding: 8px 15px;
+            display: flex;
+            justify-content: space-between;
+            min-width: 120px;
+            text-decoration: none;
+            font-weight: 700;
+            color: #1C9854;
+        }
+    }
+}
+
+.accountMain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    form {
+        display: flex;
+        flex-direction: column;
+        
+        // min-width: 150px;
+
+        > div {
+            display: flex;
+            align-items: center;
+            // justify-content: space-between;
+            font-weight: 700;
+
+            > p {
+                margin-right: 25px;
+            }
+
+            div {
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+
+                p {
+                    margin: 4px 0 0 0 ;
+                }
+
+                &:before {
+                    content: '';
+                    display: block;
+                    width: 24px;
+                    height: 24px;
+                    background-image: url(../images/edit.png);
+                }
+            }
+        }
+
+        button {
+            align-self: center;
+            width: 160px;
+            height: 48px;
+            border: 0;
+            outline: 0;
+            background: #1C9854;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 16px;
+            margin-top: 40px;
+            cursor: pointer;
+        }
+    }
+}
+
+.loginMain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // height: 100%;
+
+    form {
+        display: flex;
+        flex-direction: column;
+
+        input {
+            padding: 6px 14px;
+            background: #EEEEEE;
+            border: 2px solid #1C9854;
+            box-sizing: border-box;
+            border-radius: 12px;
+            font-size: 18px;
+            margin-bottom: 19px;
+        }
+
+        button {
+            align-self: center;
+            width: 160px;
+            height: 48px;
+            border: 0;
+            outline: 0;
+            background: #1C9854;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    }
+}
