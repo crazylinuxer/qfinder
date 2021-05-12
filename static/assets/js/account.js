@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
         email.textContent = user.email;
 
         const cv = document.querySelector('.accountMain form');
-
+        cv.addEventListener('submit', e => e.preventDefault());
         cv.addEventListener('click', (e) => {
             if (e.target.getAttribute('data-name')) {
                 changeToInput(e);

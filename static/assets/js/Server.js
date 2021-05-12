@@ -48,9 +48,6 @@ class Server {
     }
 
     static async getUserInfo(token = sessionStorage.getItem('access_token')) {
-        
-        
-
             const data = await fetch(`http://127.0.0.1:5000/api/v1/user`, {
                 method: 'GET',
                 headers: {
