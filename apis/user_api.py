@@ -1,9 +1,8 @@
-from flask import make_response
-from flask_jwt_extended import unset_refresh_cookies, set_refresh_cookies, get_jwt_identity, unset_access_cookies
+from flask_jwt_extended import get_jwt_identity, jwt_required
 
 from services import user_service
-from models.user_model import api, auth, account_model, account_edit_model, sign_up
-from utils import uses_jwt, OptionsResource
+from models.user_model import api, auth, account_model, account_edit_model, sign_up, token
+from utils import OptionsResource
 
 
 @api.route('/signup')
@@ -23,43 +22,25 @@ class SignUp(OptionsResource):
 class Auth(OptionsResource):
     @api.doc('auth_user')
     @api.expect(auth, validate=True)
-    @api.response(200, description="Success")
+    @api.marshal_with(token, code=200)
     @api.response(401, description="Invalid credentials")
     @api.response(404, description="User not found")
     def post(self):
         """Log into an account"""
-        response = make_response('null', 200)
-        access_token, refresh_token = user_service.auth_user(**api.payload)
-        set_refresh_cookies(response, refresh_token)
-        return response
-
-
-@api.route('/logout')
-class LogOut(OptionsResource):
-    @api.doc('logout_user')
-    @uses_jwt(optional=True)
-    @api.response(200, description="Logout successful")
-    def post(self):
-        """Logout from the account"""
-        response = make_response('null', 200)
-        if get_jwt_identity():
-            unset_refresh_cookies(response)
-        else:
-            unset_access_cookies(response)
-        return response
+        return user_service.auth_user(**api.payload)
 
 
 @api.route('')
 class Account(OptionsResource):
-    @api.doc('get_account')
-    @uses_jwt()
+    @api.doc('get_account', security='apikey')
+    @jwt_required()
     @api.marshal_with(account_model, code=200)
     def get(self):
         """Get the account info"""
         return user_service.get_user_account(get_jwt_identity()), 200
 
-    @api.doc('edit_account')
-    @uses_jwt()
+    @api.doc('edit_account', security='apikey')
+    @jwt_required()
     @api.marshal_with(account_model, code=200)
     @api.expect(account_edit_model, validate=True)
     def put(self):

@@ -8,6 +8,14 @@ from .actions_api import api as actions_api
 
 api_bp = Blueprint('api', __name__)
 
+authorization = {
+    'apikey': {
+        'type': 'apiKey',
+        'in': 'header',
+        'name': 'Authorization'
+    }
+}
+
 
 class CustomApi(Api):
     def handle_error(self, e):
@@ -24,7 +32,8 @@ api = CustomApi(
     title='QFinder API',
     version='0.0.1-dev',
     doc='/',
-    description='API documentation for the QualityFinder'
+    description='API documentation for the QualityFinder',
+    authorizations=authorization
 )
 
 

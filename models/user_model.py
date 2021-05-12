@@ -63,6 +63,24 @@ class AccountModel(EmailModel, NameModel, UserIdModel):
     pass
 
 
+class TokenModel(UserIdModel):
+    access_token = fields.String(
+        required=True,
+        description='Token to access resources',
+        example='qwerty'
+    )
+    refresh_token = fields.String(
+        required=True,
+        description='Token to refresh pair of tokens',
+        example='qwerty'
+    )
+
+
+token = api.model(
+    'token_model',
+    TokenModel()
+)
+
 auth = api.model(
     'auth_model',
     AuthModel(),

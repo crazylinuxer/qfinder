@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Dict
 
 from flask_jwt_extended import create_access_token, create_refresh_token
 from flask import abort
@@ -35,13 +35,17 @@ def check_password(password: str):
         abort(422, "Password must contain at least one digit")
 
 
-def auth_user(email: str, password: str) -> Tuple[str, str]:
+def auth_user(email: str, password: str) -> Dict[str, str]:
     user = user_repository.get_user_by_email(email)
     if not user:
         abort(404, "User not found")
     if not checkpw(password.encode('utf-8'), user.password_hash.encode('utf-8')):
         abort(401, "Invalid credentials given")
-    return create_access_token(identity=user.id), create_refresh_token(identity=user.id)
+    return {
+        "access_token": create_access_token(identity=user.id),
+        "refresh_token": create_refresh_token(identity=user.id),
+        "id": user.id
+    }
 
 
 def register_user(email: str, first_name: str, last_name: str, password: str, **_):
