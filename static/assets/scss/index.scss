@@ -760,3 +760,55 @@ body {
         }
     }
 }
+
+.popup {
+    position: absolute;
+    width: 300px;
+    left: calc(50% - 300px / 2);
+    top: auto;
+    bottom: auto;
+    
+    padding: 20px;
+    box-sizing: border-box;
+
+    a {
+        
+        border-radius: 6px;
+        color: #fff;
+        font-size: 18px;
+        text-decoration: none;
+        padding: 5px 20px;
+    }
+
+    &.success {
+        background: #cec;
+
+        a {
+            background: #46d888;
+        }
+    }
+
+    &.error {
+        background: rgb(255, 159, 129);
+
+        a {
+            background: #ff6b7e;
+        }
+    }
+}
+
+.changed {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgb(199, 199, 199);
+    color: #000;
+    padding: 10px 20px;
+    border-radius: 5px 0 0 0;
+    transition: .5s opacity;
+    opacity: 0;
+
+    &.active {
+        opacity: 1;
+    }
+}
