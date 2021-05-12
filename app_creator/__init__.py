@@ -8,6 +8,7 @@ from utils import config
 
 
 app = Flask(__name__, template_folder="../templates", static_folder="../static")
+app.url_map.strict_slashes = False
 
 with open(os.path.join(app.root_path, '../config.json'), 'r') as config_file:
     app.config.update(json.loads(config_file.read()))

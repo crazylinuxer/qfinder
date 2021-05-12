@@ -30,7 +30,7 @@ def after_request(response: Response):
     response.headers = Headers(headers)
 
     path = request.path
-    if path.startswith("/api/v") and path.endswith("/") and path.count("/") == 3:
+    if path.startswith("/api/v") and path.count("/") == 2 + bool(path.endswith("/")):
         body = response.get_data().replace(b"<head>", b"<head><style>.models {display: none !important}</style>")
         return Response(body, response.status_code, response.headers)
     return response
