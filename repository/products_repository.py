@@ -1,7 +1,6 @@
 from typing import List, Dict, Tuple, Any, Optional, Iterable
 
-from sqlalchemy.sql.functions import sum, count
-from flask_sqlalchemy import BaseQuery
+from sqlalchemy.sql.functions import sum, count, max as max_, min as min_
 
 from . import db, Product, Tag, TagToProduct, ProductType, Feedback
 
@@ -14,18 +13,37 @@ def get_types() -> List[ProductType]:
     return db.session.query(ProductType).all()
 
 
-def get_product_by_id(product_id: str) -> Tuple[Product, Optional[int]]:
-    product, stars_count, stars_sum = db.session.query(Product, count(Feedback.stars), sum(Feedback.stars)).\
-        filter(Product.id == product_id).filter(Feedback.product_id == product_id).first()
+def get_type_by_id(product_type_id: str) -> ProductType:
+    return db.session.query(ProductType).filter(ProductType.id == product_type_id).first()
+
+
+def get_product_by_id(product_id: str) -> Optional[Tuple[Product, Optional[int]]]:
+    result = db.session.query(Product, count(Feedback.stars), sum(Feedback.stars)).\
+        filter(Product.id == product_id).filter(Feedback.product_id == product_id).group_by(Product.id).first()
+    if not result:
+        return None
+    product, stars_count, stars_sum = result
     return product, (stars_sum / stars_count if stars_count else None)
 
 
-def get_stars_query(base: BaseQuery) -> BaseQuery:
-    pass
-
-
-def get_type_stat(type_id: str) -> Dict[str, Any]:
-    pass
+def get_type_stat(type_id: str) -> Optional[Dict[str, Any]]:
+    result = db.session.query(
+        ProductType.name, min_(Product.price), max_(Product.price), min_(Feedback.stars), max_(Feedback.stars)
+    ).\
+        filter(ProductType.id == type_id).\
+        filter(Product.type == type_id).\
+        filter(Feedback.product_id == Product.id).\
+        group_by(ProductType.name).first()
+    if not result:
+        return None
+    name, min_price, max_price, min_stars, max_stars = result
+    return {
+        "name": name,
+        "min_price": min_price,
+        "max_price": max_price,
+        "min_stars": min_stars,
+        "max_stars": max_stars
+    }
 
 
 def get_products_by_type(
@@ -41,7 +59,7 @@ def get_products_by_type(
     if max_price:
         query = query.filter(Product.price <= max_price)
     if min_stars:
-        query = query.filter()  # todo stars
+        query = query.filter(Feedback.stars >= min_stars).filter(Product.id == Feedback.product_id)
     if max_stars:
-        query = query.filter()  # todo stars
+        query = query.filter(Feedback.stars <= max_stars).filter(Product.id == Feedback.product_id)
     return query.all()
