@@ -2,10 +2,14 @@ from typing import List, Dict, Union
 
 from flask import abort
 
-from repository import actions_repository, CartItem, WishListItem, Feedback
+from repository import actions_repository, products_repository, CartItem, WishListItem, Feedback
 
 
 def add_to_cart(user_id: str, product_id: str, **_) -> None:
+    if not products_repository.get_product_object(product_id):
+        abort(404, "Product not found")
+    if actions_repository.get_cart_item(user_id, product_id):
+        abort(409, "Product is already in the cart")
     item = CartItem()
     item.user_id = user_id
     item.product_id = product_id
@@ -14,7 +18,7 @@ def add_to_cart(user_id: str, product_id: str, **_) -> None:
 
 def get_cart_content(user_id: str, **_) -> Dict[str, Union[int, List[dict]]]:
     cart = actions_repository.get_cart_content(user_id)
-    content = [{**product.as_dict, "picture": product.pictures.link} for product in cart]  # todo check for sanity
+    content = [{**product.as_dict, "picture": product.pictures[0].link if product.pictures else None} for product in cart]
     price = sum(product.price for product in cart)
     return {"content": content, "total_price": price}
 
@@ -27,6 +31,10 @@ def remove_from_cart(user_id: str, product_id: str, **_) -> None:
 
 
 def add_to_wishlist(user_id: str, product_id: str, **_) -> None:
+    if not products_repository.get_product_object(product_id):
+        abort(404, "Product not found")
+    if actions_repository.get_wishlist_item(user_id, product_id):
+        abort(409, "Product is already in the wishlist")
     item = WishListItem()
     item.user_id = user_id
     item.product_id = product_id
@@ -35,7 +43,7 @@ def add_to_wishlist(user_id: str, product_id: str, **_) -> None:
 
 def get_wishlist_content(user_id: str, **_) -> List[Dict[str, Union[str, int]]]:
     wishlist = actions_repository.get_wishlist_content(user_id)
-    return [{**product.as_dict, "picture": product.pictures.link} for product in wishlist]  # todo check for sanity
+    return [{**product.as_dict, "picture": product.pictures[0].link if product.pictures else None} for product in wishlist]
 
 
 def remove_from_wishlist(user_id: str, product_id: str, **_) -> None:
@@ -46,6 +54,8 @@ def remove_from_wishlist(user_id: str, product_id: str, **_) -> None:
 
 
 def leave_feedback(user_id: str, product_id: str, stars: int, body: str, **_) -> None:
+    if not products_repository.get_product_object(product_id):
+        abort(404, "Product not found")
     item = Feedback()
     item.stars = stars
     item.body = body

@@ -50,12 +50,12 @@ product_type = api.model(
 )
 
 
-class ProductNamePriceModel(ProductIdModel):
+class ProductBaseModel(ProductIdModel):
     name = fields.String(
         required=True,
         description='Product name',
         example='AMD Ryzen 5 1600X',
-        min_length=2,
+        min_length=1,
         max_length=128
     )
     price = fields.Integer(
@@ -66,7 +66,21 @@ class ProductNamePriceModel(ProductIdModel):
     )
 
 
+class ProductBaseStarsModel(ProductBaseModel):
+    stars_avg = fields.Float(
+        required=False,
+        description='Average number of stars left by users',
+        example=4.5,
+        min=0,
+        max=5
+    )
+
+
 class FeedbackShortModel(ModelCreator):
+    id = create_id_field(
+        required=True,
+        description="Feedback type ID in database"
+    )
     body = fields.String(
         required=True,
         description='Text of the comment',
@@ -99,7 +113,7 @@ feedback = api.model(
 )
 
 
-class ProductModel(ProductNamePriceModel):
+class ProductModel(ProductBaseStarsModel):
     description = fields.String(
         required=True,
         description='Product description',
@@ -127,13 +141,6 @@ class ProductModel(ProductNamePriceModel):
             feedback,
             required=True
         )
-    )
-    stars_avg = fields.Float(
-        required=False,
-        description='Average number of stars left by users',
-        example=4.5,
-        min=0,
-        max=5
     )
 
 

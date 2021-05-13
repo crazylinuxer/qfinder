@@ -2,7 +2,7 @@ from typing import List, Dict, Set, Any
 
 from flask import abort
 
-from repository import products_repository, Tag, Feedback
+from repository import products_repository, Tag
 
 
 def get_product_type_stat(type_id: str, **_) -> Dict[str, Any]:
@@ -27,14 +27,16 @@ def get_products_by_type(
 
 
 def get_product_info(product_id: str, **_) -> Dict[str, Any]:
-    result = products_repository.get_product_by_id(product_id)
+    result = products_repository.get_full_product_by_id(product_id)
     if not result:
         abort(404, "Product not found")
-    product, stars = result
-    item: Feedback
-    return {**product.as_dict, "stars_avg": stars, "type": product.type_ref, "pictures": product.pictures, "feedback": [
-        {**item.as_dict, "user_name": f"{item.user_ref.first_name} {item.user_ref.last_name}"} for item in product.feedback
-    ]}
+    product, feedback = result
+    return {
+        **product.as_dict,
+        "stars_avg": (sum(feedback_item.stars for feedback_item in feedback) / len(feedback)) if feedback else None,
+        "type": product.type_ref, "pictures": product.pictures,
+        "feedback": [{**i.as_dict, "user_name": f"{i.user_ref.first_name} {i.user_ref.last_name}"} for i in feedback]
+    }
 
 
 def get_tags(**_) -> List[Tag]:

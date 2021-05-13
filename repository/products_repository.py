@@ -1,4 +1,5 @@
 from typing import List, Dict, Tuple, Any, Optional, Iterable
+from threading import Thread
 
 from sqlalchemy.sql.functions import max as max_, min as min_
 from sqlalchemy.sql import func
@@ -19,13 +20,21 @@ def get_type_by_id(product_type_id: str) -> ProductType:
     return db.session.query(ProductType).filter(ProductType.id == product_type_id).first()
 
 
-def get_product_by_id(product_id: str) -> Optional[Tuple[Product, Optional[int]]]:
-    result = db.session.query(Product, func.avg(Feedback.stars.cast(Float)).label('average_stars')).outerjoin(Feedback).\
-        filter(Product.id == product_id).group_by(Product.id).group_by(Feedback.id).first()
-    if not result:
+def get_product_object(product_id: str) -> Product:
+    return db.session.query(Product).filter(Product.id == product_id).first()
+
+
+def get_full_product_by_id(product_id: str) -> Optional[Tuple[Product, Feedback]]:
+    result = [None]
+    feedback_thread = Thread(
+        target=lambda: result.append(db.session.query(Feedback).filter(Feedback.product_id == product_id).all())
+    )
+    feedback_thread.start()
+    result[0] = db.session.query(Product).filter(Product.id == product_id).first()
+    feedback_thread.join()
+    if not result[0]:
         return None
-    product, stars_avg = result
-    return product, stars_avg
+    return result[0], result[1]
 
 
 def get_type_stat(type_id: str) -> Optional[Dict[str, Any]]:

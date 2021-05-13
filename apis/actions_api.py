@@ -20,10 +20,11 @@ class Cart(OptionsResource):
     @jwt_required()
     @api.expect(product_id, validate=True)
     @api.response(404, description="Product not found")
+    @api.response(409, description="Product is already in the cart")
     @api.response(201, description="Success")
     def post(self):
         """Add an item to the user's cart"""
-        return actions_service.add_to_cart(get_jwt_identity(), **api.payload), 201
+        return actions_service.add_to_cart(get_jwt_identity(), api.payload.get("id")), 201
 
     @api.doc('remove_from_cart', security='apikey', params={"product_id": "ID of the product to remove"})
     @jwt_required()
@@ -49,10 +50,11 @@ class Wishlist(OptionsResource):
     @jwt_required()
     @api.expect(product_id, validate=True)
     @api.response(404, description="Product not found")
+    @api.response(409, description="Product is already in the wishlist")
     @api.response(201, description="Success")
     def post(self):
         """Add an item to the user's wishlist"""
-        return actions_service.add_to_wishlist(get_jwt_identity(), **api.payload), 201
+        return actions_service.add_to_wishlist(get_jwt_identity(), api.payload.get("id")), 201
 
     @api.doc('remove_from_wishlist', security='apikey',
              params=required_query_params({"product_id": "ID of the product to remove"}))

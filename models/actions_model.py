@@ -1,13 +1,13 @@
 from flask_restx import fields, Namespace
 
 from models import ModelCreator
-from models.products_model import ProductNamePriceModel, PictureModel, ProductModel, FeedbackShortModel, api as products_api
+from models.products_model import ProductBaseModel, PictureModel, ProductModel, FeedbackShortModel, api as products_api
 
 
 api = Namespace("actions", "Actions of user")
 
 
-class ShortProductModel(ProductNamePriceModel):
+class ShortProductModel(ProductBaseModel):
     picture = PictureModel.link
 
 
