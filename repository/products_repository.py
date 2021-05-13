@@ -41,14 +41,13 @@ def get_type_stat(type_id: str) -> Optional[Dict[str, Any]]:
     result = db.session.query(
         ProductType.name, min_(Product.price), max_(Product.price), min_(Feedback.stars), max_(Feedback.stars)
     ).\
-        filter(ProductType.id == type_id).\
-        filter(Product.type == type_id).\
-        filter(Feedback.product_id == Product.id).\
-        group_by(ProductType.name).first()
+        outerjoin(Product, Product.type == ProductType.id).outerjoin(Feedback).\
+        filter(ProductType.id == type_id).group_by(ProductType.name).first()
     if not result:
         return None
     name, min_price, max_price, min_stars, max_stars = result
     return {
+        "id": type_id,
         "name": name,
         "min_price": min_price,
         "max_price": max_price,
