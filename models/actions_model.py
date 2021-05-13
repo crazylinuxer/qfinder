@@ -1,13 +1,18 @@
 from flask_restx import fields, Namespace
 
 from models import ModelCreator
-from models.products_model import ProductBaseModel, PictureModel, ProductModel, FeedbackShortModel, api as products_api
+from models.products_model import (ProductBaseModel, ProductBaseStarsModel, PictureModel,
+                                   ProductModel, FeedbackShortModel, api as products_api)
 
 
 api = Namespace("actions", "Actions of user")
 
 
 class ShortProductModel(ProductBaseModel):
+    picture = PictureModel.link
+
+
+class ShortProductStarsModel(ProductBaseStarsModel):
     picture = PictureModel.link
 
 
@@ -18,8 +23,8 @@ actions_short_product = api.model(
 
 
 short_product = products_api.model(
-    'short_product_model',
-    ShortProductModel()
+    'short_product_model_with_stars',
+    ShortProductStarsModel()
 )
 
 
