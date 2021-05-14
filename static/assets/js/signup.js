@@ -13,7 +13,7 @@ form.addEventListener('submit', e => {
 
     Server.signUp(...data, true).then(status => {
         if (status === 201) {
-            Popup.open('Registration', 'You are have been succesfully registered!', status, '../')
+            Popup.open('Registration', 'You are have been succesfully registered!', status, '../login')
         } else {
             Popup.open('Registration', 'Smth went wrong', status, '../')
         }

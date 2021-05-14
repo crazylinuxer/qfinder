@@ -37,38 +37,23 @@
         <aside class="categoryMain__options">
             <h3>Tags:</h3>
 
-            <section class="options">
-                <input type="checkbox" id="option1">
-                <label for="option1">New</label>
-                
-                <input type="checkbox" id="option2">
-                <label for="option2">High performance</label>
-    
-                <input type="checkbox" id="option3">
-                <label for="option3">Warranty included</label>
-    
-                <input type="checkbox" id="option4">
-                <label for="option4">Economical option</label>
-    
-                <input type="checkbox" id="option5">
-                <label for="option5">Quality confirmed by testing</label>
-            </section>
+            <section class="options"></section>
             
             <section class="ranges">
                 <p>Stars:</p>
                 
-                <input type="number" min="1" max="5" placeholder="1" value="1"> - 
-                <input type="number" min="1" max="5" placeholder="5" value="5">
+                <input type="number" min="1" max="5" placeholder="1" value="1" name="stars_min"> - 
+                <input type="number" min="1" max="5" placeholder="5" value="5" name="stars_max">
                 
 
                 <p>Price:</p>
                 
-                <input type="number" min="1" placeholder="1"> - 
-                <input type="number" min="1" placeholder="9999">
+                <input type="number" min="1" placeholder="1" name="price_min"> - 
+                <input type="number" min="1" placeholder="9999" name="price_max">
             </section>
         </aside>
         <section class="categoryMain__items">
-            <a class="categoryMain__item" href="#">
+            <!-- <a class="categoryMain__item" href="#">
                 <img src="../../static/assets/images/ryzen_box.png" alt="AMD Ryzen 5 1600">
                 <div class="stars">
                     <img src="../../static/assets/images/star-active.png" alt="">
@@ -126,8 +111,12 @@
                     <h2>AMD Ryzen 5 1600</h2>
                     <span>$140</span>
                 </div>
-            </a>  
+            </a>   -->
         </section>
     </main>
+
+    <script src="../../static/assets/js/utils.js"></script>
+    <script src="../../static/assets/js/Server.js"></script>
+    <script src="../../static/assets/js/category.js"></script>
 </body>
 </html>
