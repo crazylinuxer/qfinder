@@ -66,7 +66,7 @@ def get_products_by_type(
         filter(Product.type == type_id).\
         filter(ProductPicture.product_id == Product.id)
     if tags:
-        query = query.filter(TagToProduct.tag_id.in_(tags)).filter(Product.id.in_(TagToProduct.product_id))
+        query = query.filter(TagToProduct.tag_id.in_(tags)).filter(Product.id == TagToProduct.product_id)
     if min_price:
         query = query.filter(Product.price >= min_price)
     if max_price:
