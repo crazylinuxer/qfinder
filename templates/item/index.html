@@ -36,66 +36,26 @@
        <section class="itemMain__left">
             <div class="itemMain__left-top">
                 <div class="itemMain__slider">
-                    <div class="itemMain__slider-thumbs">
-                        <div class="active"><img src="../../static/assets/images/ryzen_box.png" alt=""></div>
-                        <div><img src="../../static/assets/images/ryzen_box.png" alt=""></div>
-                        <div><img src="../../static/assets/images/ryzen_box.png" alt=""></div>
-                    </div>
-                    <div class="itemMain__slider-current">
-                        <img src="../../static/assets/images/ryzen_box.png" alt="">
-
-                        <div class="stars">
-                            <img src="../../static/assets/images/star-active.png" alt="">
-                            <img src="../../static/assets/images/star-active.png" alt="">
-                            <img src="../../static/assets/images/star-active.png" alt="">
-                            <img src="../../static/assets/images/star-active.png" alt="">
-                            <img src="../../static/assets/images/star.png" alt="">
-
-                            <span class="average">4.5</span>
-                        </div>
-                    </div>
+                    
                 </div>
                 <div class="itemMain__descirption">
-                    <p>The AMD Ryzen 5 3600 processor was born thanks to a 7 nm technical process. It got 6 cores, each of which operates in two threads, with a total frequency of 3.6 GHz, increasing in Boost mode to 4.2 GHz. The model also got 3MB of cache memory of the second level, 32MB of the third, TDP of 65 W and secured support for DDR4 RAM with a maximum frequency of up to 3200 MHz.</p>
-    
-                    <div class="itemMain__btns">
-                        <a href="#">
-                            <div>
-                                <p>Add to cart</p>
-                                <div>
-                                    <p class="price">$200</p>
-                                    <img src="../../static/assets/images/cart.png" alt="">
-                                </div>
-                            </div>
-                        </a>
-                        <a href="#">
-                            <div>
-                                <p>Add to wishlist</p>
-                                <div>
-                                    <img src="../../static/assets/images/heart.png" alt="">
-                                </div>
-                            </div>
-                        </a>
+                    
                     </div>
                 </div>
             </div>
+            <div class="itemMain__left-char">
+
+            </div>
             <div class="itemMain__left-comments">
-                <div class="itemMain__comment">
-                    <div class="itemMain__comment-info">
-                        <img src="../../static/assets/images/account.png" alt="">
-                        <p>Ivan Ivanov</p>
-                        <div class="stars">
-                            <img src="../../static/assets/images/star-active.png" alt="">
-                            <img src="../../static/assets/images/star-active.png" alt="">
-                            <img src="../../static/assets/images/star-active.png" alt="">
-                            <img src="../../static/assets/images/star-active.png" alt="">
-                            <img src="../../static/assets/images/star.png" alt="">
-                        </div>
-                    </div>
-                    <p>I'm tired of my old PC (on the phenom x4 965), which I assembled in 2011 and decided to make a full upgrade:
-                        took this processor, the asus v550-plus motherboard, gigabyte 2060 super videocard, 32 gigs of hyperx fury 3200, samsung 9700 evo plus) - on the new system the “Witcher 3”, “Control”, “GTA5”, “Detroit become human” and a couple of other games that I launched over the past five days from the purchase - at ultra-settings in full-hd they produce more than a hundred frames per second.
-                        At the same time, the task manager shows the processor load at 30-40% (on the video card, in this case, the same is in the region of 30%), so the performance margin is huge.
-                        I'm satisfied.</p>
+                <a href="../login/" class="itemMain__leaveCommentBtn">Leave a feedback</a>
+
+                <div class="itemMain__leaveComment">
+                    <form>
+                        Quantity of stars: <input type="number" name="stars" min="1" max="5" value="5" required>
+                        <textarea name="body" cols="30" rows="10" placeholder="Message" required></textarea>
+
+                        <button>Save</button>
+                    </form>
                 </div>
             </div>
        </section>
@@ -105,22 +65,13 @@
                     <div class="table__head">
                         <h2>Characteristics</h2>
                     </div>
-                    
-                    <div class="table__row">
-                        <div>Socket</div>
-                        <div>AM4</div>
-                    </div>
-                    <div class="table__row">
-                        <div>Microarchitecture</div>
-                        <div>Zen 2</div>
-                    </div>
-                    <div class="table__row">
-                        <div>Core</div>
-                        <div>Matisse</div>
-                    </div>
                 </div>
             </div>
        </section>
     </main>
+
+    <script src="../../static/assets/js/Server.js"></script>
+    <script src="../../static/assets/js/utils.js"></script>
+    <script src="../../static/assets/js/product.js"></script>
 </body>
 </html>

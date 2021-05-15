@@ -1,23 +1,20 @@
 class Server {
     static basePoint = 'http://127.0.0.1:5000/api/v1/';
-    
+
 
     static async signUp(f_name, l_name, email, password) {
         const data = await fetch(`http://127.0.0.1:5000/api/v1/user/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
-              },
-              body: JSON.stringify({
+            },
+            body: JSON.stringify({
                 email: email,
                 first_name: f_name,
                 last_name: l_name,
                 password: password
-              })
+            })
         })
-        const r = await data.json();
-
-        console.log(r);
 
         return data.status;
     }
@@ -27,75 +24,72 @@ class Server {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json;charset=utf-8'
-              },
-              body: JSON.stringify({
+            },
+            body: JSON.stringify({
                 email: email,
                 password: password
-              })
+            })
         })
 
-        const r = await data.json();
+        const result = await data.json();
 
-        for (const key in r) {
-            if (Object.hasOwnProperty.call(r, key)) {
-                const element = r[key];
+        for (const key in result) {
+            if (Object.hasOwnProperty.call(result, key)) {
+                const element = result[key];
                 sessionStorage.setItem(key, element);
             }
         }
 
-        console.log(r);
         return data.status
     }
 
     static async getUserInfo(token = sessionStorage.getItem('access_token')) {
-            const data = await fetch(`http://127.0.0.1:5000/api/v1/user`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`  
-                }
-            })
-
-            const result = await data.json();
-
-            sessionStorage.setItem('user', JSON.stringify(result));
-
-            if (data.status === 401) {
-                Server.refreshToken(sessionStorage.getItem('refresh_token'))
-                Server.getUserInfo(token);
-            } else {
-                console.log(result);
-                return data.status
+        const data = await fetch(`${this.basePoint}user`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
+        })
+
+        const result = await data.json();
+
+        sessionStorage.setItem('user', JSON.stringify(result));
+
+        if (data.status === 401) {
+            Server.refreshToken(sessionStorage.getItem('refresh_token'))
+            Server.getUserInfo(token);
+        } else {
+            return data.status
+        }
     }
 
     static async refreshToken(token) {
-        const data = await fetch(`http://127.0.0.1:5000/api/v1/user/auth/refresh`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`  
-                }
+        const data = await fetch(`${this.basePoint}user/auth/refresh`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
         })
-        const res = await data.json();
 
-        for (const key in res) {
-            if (Object.hasOwnProperty.call(res, key)) {
-                const element = res[key];
+        const result = await data.json();
+
+        for (const key in result) {
+            if (Object.hasOwnProperty.call(result, key)) {
+                const element = result[key];
                 sessionStorage.setItem(key, element);
             }
         }
-
-        console.log(res)
     }
 
     static logout() {
-      sessionStorage.setItem('user', null);
-      sessionStorage.removeItem('refresh_token');
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('id');
+        sessionStorage.setItem('user', null);
+        sessionStorage.removeItem('refresh_token');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('id');
     }
 
     static async updateAccoutInfo(userData, token = sessionStorage.getItem('access_token')) {
-        const data = await fetch(`http://127.0.0.1:5000/api/v1/user`, {
+        const data = await fetch(`${this.basePoint}user`, {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -104,18 +98,149 @@ class Server {
             body: JSON.stringify(userData)
         });
 
-        const result = await data.json();
-
         if (data.status === 401) {
             Server.refreshToken(sessionStorage.getItem('refresh_token'))
             Server.updateAccoutInfo(userData, token);
         } else {
-            console.log(result);
             return data.status
         }
+    }
 
-        console.log(result);
+    static async getProductTypes(token = sessionStorage.getItem('access_token')) {
+        const data = await fetch(`${this.basePoint}products/types`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        const result = await data.json();
+
+        if (data.status === 401) {
+            Server.refreshToken(sessionStorage.getItem('refresh_token'))
+            Server.getProductTypes(token);
+        } else {
+            return result;
+        }
+    }
+
+    static async getAllProductsByType(type_id, options, token = sessionStorage.getItem('access_token')) {
+     
+
+            let url = `${this.basePoint}products/by_type?type=${type_id}`;
+            
+            if (options) {
+                for (const key in options) {
+                    if (Object.hasOwnProperty.call(options, key) && options[key]) {
+                        if (key === 'tags' && options[key].length === 0) {
+                            null;
+                        } else {
+                            url += `&${key}=${options[key]}`; 
+                        }
+                        
+                    }
+                }
+            }
+            
+            console.log(url)
+
+        const data = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        const result = await data.json();
+
+        if (data.status === 401) {
+            Server.refreshToken(sessionStorage.getItem('refresh_token'))
+            Server.getAllProductsByType(type_id, options, token);
+        } else {
+            return result;
+        }
+    }
+
+    static async getAllTags(token = sessionStorage.getItem('access_token')) {
+        const data = await fetch(`${this.basePoint}products/tags`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        const result = await data.json();
+
+        if (data.status === 401) {
+            Server.refreshToken(sessionStorage.getItem('refresh_token'))
+            Server.getAllTags(token);
+        } else {
+            return result;
+        }
+    }
+
+    static async getCategoryStat(id, token = sessionStorage.getItem('access_token')) {
+        const data = await fetch(`${this.basePoint}products/type_stat?type=${id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        const result = await data.json();
+
+        if (data.status === 401) {
+            Server.refreshToken(sessionStorage.getItem('refresh_token'))
+            Server.getCategoryStat(id, token);
+        } else {
+            return result;
+        }
+    }
+
+    static async getProductInfo(product_id, token = sessionStorage.getItem('access_token')) {
+        const data = await fetch(`${this.basePoint}products/info?product=${product_id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        const result = await data.json();
+
+        if (data.status === 401) {
+            Server.refreshToken(sessionStorage.getItem('refresh_token'))
+            Server.getProductInfo(product_id, token);
+        } else {
+            return result;
+        }
+    } 
+
+    static async sendProductFeedback(options, token = sessionStorage.getItem('access_token')) {
+        
+        console.log(JSON.stringify(options))
+        const data = await fetch(`${this.basePoint}actions/feedback`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                'accept': 'application/json'
+            },
+            body: JSON.stringify(options)
+        });
+
+        const result = await data.json();
+
+        if (data.status === 401) {
+            Server.refreshToken(sessionStorage.getItem('refresh_token'))
+            Server.sendProductFeedback(options, token);
+        } else {
+            return result;
+        }
+    }
+
+    static grabParamsFromURL() {
+        const url = new URLSearchParams(document.location.search.substring(1));
+
+        return Object.fromEntries(url.entries());
     }
 }
-
-// Server.signUp('Anton', 'Burchak', 'anton.burchak@mail.ru', 'qwerTy123')
