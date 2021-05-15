@@ -26,7 +26,7 @@ def get_products_by_type(
     ]
 
 
-def get_product_info(product_id: str, **_) -> Dict[str, Any]:
+def get_product_info(user_id: str, product_id: str, **_) -> Dict[str, Any]:
     result = products_repository.get_full_product_by_id(product_id)
     if not result:
         abort(404, "Product not found")
@@ -35,7 +35,10 @@ def get_product_info(product_id: str, **_) -> Dict[str, Any]:
         **product.as_dict,
         "stars_avg": (sum(feedback_item.stars for feedback_item in feedback) / len(feedback)) if feedback else None,
         "type": product.type_ref, "pictures": product.pictures,
-        "feedback": [{**i.as_dict, "user_name": f"{i.user_ref.first_name} {i.user_ref.last_name}"} for i in feedback]
+        "feedback": [
+            {**i.as_dict, "user_name": f"{i.user_ref.first_name} {i.user_ref.last_name}", "deletable": i.user_ref.id == user_id}
+            for i in feedback
+        ]
     }
 
 

@@ -107,9 +107,23 @@ class FeedbackModel(FeedbackShortModel):
     )
 
 
+class FeedbackInProductModel(FeedbackModel):
+    deletable = fields.Boolean(
+        required=True,
+        description="Describes whether current user can delete this comment or not",
+        example=True
+    )
+
+
 feedback = api.model(
     'feedback_model',
     FeedbackModel()
+)
+
+
+feedback_in_product = api.model(
+    'feedback_in_product_model',
+    FeedbackInProductModel()
 )
 
 
@@ -138,7 +152,7 @@ class ProductModel(ProductBaseStarsModel):
     )
     feedback = fields.List(
         fields.Nested(
-            feedback,
+            feedback_in_product,
             required=True
         )
     )

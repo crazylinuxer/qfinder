@@ -1,4 +1,5 @@
 from flask import request
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.products_model import api, product, product_type, tag, type_statistics
 from models.actions_model import short_product
@@ -61,9 +62,10 @@ class ProductsByType(OptionsResource):
 
 @api.route('/info')
 class ProductInfo(OptionsResource):
-    @api.doc('get_product_info', params=required_query_params({"product": "ID of the product"}))
+    @api.doc('get_product_info', security='apikey', params=required_query_params({"product": "ID of the product"}))
     @api.response(404, description="Product not found")
     @api.marshal_with(product, code=200)
+    @jwt_required(optional=True)
     def get(self):
         """Get product info"""
-        return products_service.get_product_info(get_uuid("product")), 200
+        return products_service.get_product_info(get_jwt_identity(), get_uuid("product")), 200
