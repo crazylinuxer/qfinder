@@ -2,7 +2,7 @@ const renderItems = (parent, data) => {
     data.forEach(item => {
         parent.innerHTML += `
         <div class="wishMain__item">
-            <a href="${Server.baseURL + 'templates/item/index.html?id=' + item.id}" class="wishMain__item-link">
+            <a href="${Server.baseURL + 'item/index.html?id=' + item.id}" class="wishMain__item-link">
                 <img src="${item.picture}" alt="${item.name}">
                 <h2>${item.name}</h2>
             </a>
