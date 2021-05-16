@@ -130,7 +130,7 @@ const renderComments = (parent, data) => {
     })
 }
 
-if (isLogged()) {
+// if (isLogged()) {
     document.addEventListener('DOMContentLoaded', async () => {
         const product = await Server.getProductInfo(id);
         const slider = document.querySelector('.itemMain__slider');
@@ -231,9 +231,9 @@ if (isLogged()) {
             })
         })
     });
-} else {
-    window.location.replace(`${Server.baseURL}templates/login/index.html?redirect_url=${this.location.href}`);
-}
+// } else {
+//     window.location.replace(`${Server.baseURL}templates/login/index.html?redirect_url=${this.location.href}`);
+// }
 
 
 
