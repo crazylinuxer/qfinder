@@ -777,7 +777,7 @@ body {
 }
 
 .popup {
-    position: absolute;
+    position: fixed;
     width: 300px;
     left: calc(50% - 300px / 2);
     top: auto;
@@ -909,9 +909,35 @@ body {
       > p {
           margin: 10px 0;
       }
+
+      &[data-owner=true] {
+          border: 3px solid green;
+      }
+      position: relative;
+      &.deletable {
+          .del {
+              display: block;
+          }
+         
+      }
   }
 
+  .wishMain__item {
+    position: relative;
 
+  }
+
+  .del {
+    content: '';
+    width: 19px;
+    height: 18px;
+    display: none;
+    background-image: url(../images/X.png);
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+}
   
   .itemMain__left-char {
       display: none;

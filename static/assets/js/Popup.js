@@ -17,7 +17,20 @@ class Popup {
         div.appendChild(p);
         div.appendChild(btn);
 
+        if (ref === 'null') {
+            btn.addEventListener('click', e => {
+                e.preventDefault()
+                
+                const pop = document.querySelector('.popup');
+
+                pop.remove();
+            });
+            
+        }
 
         document.body.appendChild(div);
+
+        const pop = document.querySelector('.popup');
+        pop.style.top = `calc(50% - ${pop.clientHeight}px / 2)`;
     }
 }

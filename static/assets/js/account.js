@@ -57,4 +57,11 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         })
     }
+
+    const logoutBtn = document.querySelector('form button');
+
+    logoutBtn.addEventListener('click', () => {
+        Server.logout();
+        window.location.replace(`${Server.baseURL}templates/index.html`);
+    });
 })

@@ -1,6 +1,6 @@
-const isLogged = JSON.parse(sessionStorage.getItem('user')) || null;
+// const isLogged = JSON.parse(sessionStorage.getItem('user')) || null;
 
-if (isLogged) {
+if (isLogged()) {
 
     window.addEventListener('DOMContentLoaded', () => {
         const nav = document.querySelector('.header__navigation');
