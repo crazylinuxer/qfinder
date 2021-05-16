@@ -232,7 +232,7 @@ if (isLogged()) {
         })
     });
 } else {
-    window.location.replace(`${Server.baseURL}templates/login/index.html?redirect_url=${this.location.href}`);
+    window.location.replace(`${Server.baseURL}login/index.html?redirect_url=${this.location.href}`);
 }
 
 

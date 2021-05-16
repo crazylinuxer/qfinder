@@ -62,6 +62,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     logoutBtn.addEventListener('click', () => {
         Server.logout();
-        window.location.replace(`${Server.baseURL}templates/index.html`);
+        window.location.replace(`${Server.baseURL}index.html`);
     });
 })

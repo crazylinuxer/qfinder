@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (items.length > 0) {
             items.forEach(item => {
                 parent.innerHTML += `
-                <a class="categoryMain__item" href="${Server.baseURL}/templates/item/?id=${item.id}">
+                <a class="categoryMain__item" href="${Server.baseURL}/item/?id=${item.id}">
                     <img src="${item.picture}" alt="${item.name}">
                     
                     ${renderStars(item.stars_avg)}
