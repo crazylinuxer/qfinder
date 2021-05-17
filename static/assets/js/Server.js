@@ -200,7 +200,8 @@ class Server {
     static async getProductInfo(product_id, token = sessionStorage.getItem('access_token')) {
         
         const auth = token ? {'Authorization': `Bearer ${token}`} : {};
-        if (auth) {
+
+        if (token) {
             const data = await fetch(`${this.basePoint}products/info?product=${product_id}`, {
                 method: 'GET',
                 headers: {
