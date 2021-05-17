@@ -62,9 +62,8 @@ def get_products_by_type(
         min_stars: int = None, max_stars: int = None
 ) -> List[Tuple[Product, ProductPicture, Optional[int]]]:
     query = db.session.query(Product, ProductPicture, func.avg(Feedback.stars.cast(Float)).label('average_stars')).\
-        distinct(Product.id).outerjoin(Feedback).\
-        filter(Product.type == type_id).\
-        filter(ProductPicture.product_id == Product.id)
+        distinct(Product.id).outerjoin(Feedback).outerjoin(ProductPicture).\
+        filter(Product.type == type_id)
     if tags:
         query = query.filter(TagToProduct.tag_id.in_(tags)).filter(Product.id == TagToProduct.product_id)
     if min_price:

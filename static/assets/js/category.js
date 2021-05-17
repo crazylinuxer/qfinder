@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `
             })
         } else {
-            parent.innerHTML += `Sorry, nothing founded :(`
+            parent.innerHTML += `Sorry, nothing found :(`
         }
         
 

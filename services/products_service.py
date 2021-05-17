@@ -21,7 +21,12 @@ def get_products_by_type(
         abort(404, "Product type not found")
     products = products_repository.get_products_by_type(product_type, tags, min_price, max_price, min_stars, max_stars)
     return [
-        {**product[0].as_dict, "picture": product[1].link, "stars_avg": product[2], "type": product[0].type_ref}
+        {
+            **product[0].as_dict,
+            "picture": product[1].link if product[1] else None,
+            "stars_avg": product[2],
+            "type": product[0].type_ref
+        }
         for product in products
     ]
 
