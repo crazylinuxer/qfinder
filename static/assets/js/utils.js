@@ -1,6 +1,6 @@
 
-function renderStars(average = 3.5) {
-    average = average || 3.5;
+function renderStars(average = 0) {
+    average = average || 0;
     const percent = (average * 100) / 5;
     
     return `

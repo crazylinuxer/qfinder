@@ -842,4 +842,7 @@ body {
   display: none;
 }
 
+.wishMain__item .del {
+  display: block;
+}
 /*# sourceMappingURL=index.css.map */

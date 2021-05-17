@@ -1,5 +1,4 @@
 from typing import List, Dict, Tuple, Any, Optional, Iterable
-from threading import Thread
 
 from sqlalchemy.sql.functions import max as max_, min as min_
 from sqlalchemy.sql import func
@@ -24,17 +23,12 @@ def get_product_object(product_id: str) -> Product:
     return db.session.query(Product).filter(Product.id == product_id).first()
 
 
-def get_full_product_by_id(product_id: str) -> Optional[Tuple[Product, Feedback]]:
-    result = [None]
-    feedback_thread = Thread(
-        target=lambda: result.append(db.session.query(Feedback).filter(Feedback.product_id == product_id).all())
-    )
-    feedback_thread.start()
-    result[0] = db.session.query(Product).filter(Product.id == product_id).first()
-    feedback_thread.join()
-    if not result[0]:
+def get_full_product_by_id(product_id: str) -> Optional[Tuple[Product, List[Feedback]]]:
+    feedback = db.session.query(Feedback).filter(Feedback.product_id == product_id).all()
+    product = db.session.query(Product).filter(Product.id == product_id).first()
+    if not product:
         return None
-    return result[0], result[1]
+    return product, (feedback or [])
 
 
 def get_type_stat(type_id: str) -> Optional[Dict[str, Any]]:

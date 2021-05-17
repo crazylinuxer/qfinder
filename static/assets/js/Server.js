@@ -59,7 +59,7 @@ class Server {
             Server.refreshToken(sessionStorage.getItem('refresh_token'))
             Server.getUserInfo(token);
         } else {
-            return data.status
+            return data;
         }
     }
 
@@ -200,24 +200,43 @@ class Server {
     static async getProductInfo(product_id, token = sessionStorage.getItem('access_token')) {
         
         const auth = token ? {'Authorization': `Bearer ${token}`} : {};
+        if (auth) {
+            const data = await fetch(`${this.basePoint}products/info?product=${product_id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+            });
 
+            const result = await data.json();
+            console.log(result);
+            if (data.status === 401) {
+                Server.refreshToken(sessionStorage.getItem('refresh_token'))
+                Server.getProductInfo(product_id, token);
+            } else {
+                return result;
+            }
+
+    } else {
         const data = await fetch(`${this.basePoint}products/info?product=${product_id}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                auth
-            },
-        });
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
 
-        const result = await data.json();
+            const result = await data.json();
+            console.log(result);
+            if (data.status === 401) {
+                Server.refreshToken(sessionStorage.getItem('refresh_token'))
+                Server.getProductInfo(product_id, token);
+            } else {
+                return result;
+            }
+    }
 
-        if (data.status === 401) {
-            Server.refreshToken(sessionStorage.getItem('refresh_token'))
-            Server.getProductInfo(product_id, token);
-        } else {
-            return result;
-        }
-    } 
+}
 
     static async sendProductFeedback(options, token = sessionStorage.getItem('access_token')) {
         const data = await fetch(`${this.basePoint}actions/feedback`, {

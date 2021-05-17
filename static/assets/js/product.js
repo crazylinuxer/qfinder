@@ -18,6 +18,7 @@ const renderThumbs = thumbs => {
 }
 
 const renderSlider = (parent, data) => {
+    console.log(data);
     let pattern = `
                     <div class="itemMain__slider-thumbs">
                         ${renderThumbs(data.pictures)}
@@ -28,7 +29,7 @@ const renderSlider = (parent, data) => {
                         <div class="q">
                             ${renderStars(data.stars_avg)}
 
-                            <span class="average">${data.stars_avg.toFixed(1)}</span>
+                            <span class="average">${data.stars_avg ? data.stars_avg.toFixed(1) : '0'}</span>
                         </div>
                     </div>
     `;
@@ -138,7 +139,7 @@ const renderComments = (parent, data) => {
         const characteristics = document.querySelector('.itemMain__charecteristics .table');
         const productName = document.querySelector('.catalogHeader__location p');
         const comments = document.querySelector('.itemMain__left-comments');
-        
+        console.log(product);
     
         renderSlider(slider, product);
         initSlider();
@@ -148,7 +149,7 @@ const renderComments = (parent, data) => {
     
     
         productName.textContent = product.name;
-        console.log(product);
+
     
         const leaveComment = document.querySelector('.itemMain__leaveComment');
     
@@ -180,7 +181,7 @@ const renderComments = (parent, data) => {
                     const res = await Server.sendProductFeedback(data)
                     console.log(res);
                     const updatedProduct = await Server.getProductInfo(id);
-                    renderComments(comments, updatedProduct);
+                    window.location.reload();
                 })
             } 
     

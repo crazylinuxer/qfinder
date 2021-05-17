@@ -20,7 +20,7 @@ form.addEventListener('submit', e => {
             sessionStorage.setItem('logged', 'true');
             Server.getUserInfo();
         } else {
-            Popup.open('Autorization', 'Smth went wrong', status, '../login/')
+            Popup.open('Autorization', 'Smth went wrong', status, '../login/index.html')
         }
     })
 })

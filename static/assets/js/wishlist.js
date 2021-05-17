@@ -22,6 +22,10 @@ const renderItems = (parent, data) => {
         </div>
         `
     });
+
+    if (data.length === 0) {
+        parent.innerHTML = `<h3>You don't have any items in wish list :(</h3>`;
+    }
 }
 
 if (isLogged()) {
@@ -62,6 +66,10 @@ if (isLogged()) {
 
                 if (res === 200) {
                     this.parentNode.remove()
+                    console.log()
+                    if (parent.querySelectorAll('.wishMain__item').length === 0) {
+                        parent.innerHTML = `<h3>You don't have any items in wish list :(</h3>`;
+                    }
                 }
             })
         })
@@ -69,7 +77,7 @@ if (isLogged()) {
 
     })
 } else {
-    window.location.replace(`${Server.baseURL}/login`)
+    window.location.replace(`${Server.baseURL}/login/index.html`)
 }
 
 

@@ -14,7 +14,7 @@ from app_creator import app
 MAX_FIELD_LENGTH = 64
 
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app, engine_options={"pool_size":20, "max_overflow": 0})
 Base = declarative_base()
 
 
