@@ -1,6 +1,7 @@
-from typing import List, Dict, Tuple, Any, Optional, Iterable
+from typing import List, Dict, Tuple, Any, Optional, Iterable, Set, Union
 
 from sqlalchemy.sql.functions import max as max_, min as min_
+from sqlalchemy.dialects.postgresql import json
 from sqlalchemy.sql import func
 from sqlalchemy import Float
 
@@ -39,6 +40,15 @@ def get_type_stat(type_id: str) -> Optional[Dict[str, Any]]:
         filter(ProductType.id == type_id).group_by(ProductType.name).first()
     if not result:
         return None
+    all_characteristics = db.session.query(Product.characteristics).filter(Product.type == type_id).all()
+    characteristics_stat: Dict[str, Union[Set[str], List[str]]] = {}
+    for characteristics in all_characteristics:
+        for characteristic in characteristics[0]:
+            if characteristic not in characteristics_stat:
+                characteristics_stat[characteristic] = set()
+            characteristics_stat[characteristic].add(characteristics[0][characteristic])
+    for characteristic_type in list(characteristics_stat.keys()):
+        characteristics_stat[characteristic_type] = list(characteristics_stat[characteristic_type])
     name, min_price, max_price, min_stars, max_stars = result
     return {
         "id": type_id,
@@ -46,14 +56,16 @@ def get_type_stat(type_id: str) -> Optional[Dict[str, Any]]:
         "min_price": min_price,
         "max_price": max_price,
         "min_stars": min_stars,
-        "max_stars": max_stars
+        "max_stars": max_stars,
+        "characteristics": characteristics_stat
     }
 
 
 def get_products_by_type(
         type_id: str, tags: Iterable[str] = None,
         min_price: int = None, max_price: int = None,
-        min_stars: int = None, max_stars: int = None
+        min_stars: int = None, max_stars: int = None,
+        characteristics: Dict[str, Any] = None
 ) -> List[Tuple[Product, ProductPicture, Optional[int]]]:
     query = db.session.query(Product, ProductPicture, func.avg(Feedback.stars.cast(Float)).label('average_stars')).\
         distinct(Product.id).outerjoin(Feedback).outerjoin(ProductPicture).\
@@ -68,4 +80,6 @@ def get_products_by_type(
         query = query.filter(Feedback.stars >= min_stars)
     if max_stars:
         query = query.filter(Feedback.stars <= max_stars)
+    if characteristics:
+        query = query.filter(json.CONTAINS(Product.characteristics, characteristics))
     return query.group_by(Product.id, ProductPicture.id).all()

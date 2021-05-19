@@ -17,6 +17,17 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- Name: text_array; Type: TYPE; Schema: public; Owner: qfinder_user
+--
+
+CREATE TYPE public.text_array AS (
+	data text[]
+);
+
+
+ALTER TYPE public.text_array OWNER TO qfinder_user;
+
+--
 -- Name: uuid(); Type: FUNCTION; Schema: public; Owner: qfinder_user
 --
 
@@ -122,7 +133,7 @@ CREATE TABLE public.products (
     id uuid DEFAULT public.uuid() NOT NULL,
     name text NOT NULL,
     description text NOT NULL,
-    characteristics json NOT NULL,
+    characteristics jsonb NOT NULL,
     type uuid NOT NULL,
     price integer NOT NULL
 );

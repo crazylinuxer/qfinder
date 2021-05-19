@@ -201,6 +201,11 @@ class TypeStatisticsModel(ModelCreator):
         min=0,
         max=5
     )
+    characteristics = fields.Raw(
+        {},
+        required=True,
+        description="Product characteristics"
+    )
 
 
 tag = api.model(

@@ -15,11 +15,14 @@ def get_product_type_stat(type_id: str, **_) -> Dict[str, Any]:
 def get_products_by_type(
         product_type: str, tags: Set[str] = None,
         min_price: int = None, max_price: int = None,
-        min_stars: int = None, max_stars: int = None, **_
+        min_stars: int = None, max_stars: int = None,
+        characteristics: Dict[str, Dict[str, Any]] = None, **_
 ) -> List[Dict[str, Any]]:
     if not products_repository.get_type_by_id(product_type):
         abort(404, "Product type not found")
-    products = products_repository.get_products_by_type(product_type, tags, min_price, max_price, min_stars, max_stars)
+    products = products_repository.get_products_by_type(
+        product_type, tags, min_price, max_price, min_stars, max_stars, characteristics
+    )
     return [
         {
             **product[0].as_dict,

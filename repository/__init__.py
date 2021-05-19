@@ -5,8 +5,9 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm.state import InstanceState
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import (inspect, Column, String, SmallInteger, UniqueConstraint,
-                        CheckConstraint, ForeignKey, JSON, Integer)
+                        CheckConstraint, ForeignKey, Integer)
 
 from app_creator import app
 
@@ -59,7 +60,7 @@ class Product(Base, ImprovedBase):
     id = Column(UUID(), nullable=False, primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String(128), nullable=False, unique=True)
     description = Column(String(2048), nullable=False, unique=True)
-    characteristics = Column(JSON(), nullable=False)
+    characteristics = Column(JSONB(), nullable=False)
     type = Column(UUID(), ForeignKey('product_types.id', ondelete='NO ACTION'), nullable=False)
     price = Column(Integer(), nullable=False)
 

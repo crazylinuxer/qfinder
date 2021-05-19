@@ -1,4 +1,6 @@
-from flask import request
+import json
+
+from flask import request, abort
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 from models.products_model import api, product, product_type, tag, type_statistics
@@ -44,19 +46,30 @@ class ProductsByType(OptionsResource):
         "min_price": {"type": int, "description": "Minimal price to show"},
         "max_price": {"type": int, "description": "Maximal price to show"},
         "min_stars": {"type": float, "description": "Minimum stars to show"},
-        "max_stars": {"type": float, "description": "Maximum stars to show"}
+        "max_stars": {"type": float, "description": "Maximum stars to show"},
+        "characteristics": {
+            "type": str, "description": "Product characteristics to include (for example, '{\"Frequency\":\"4 GHz\"}')"
+        }
     })
     @api.response(404, description="Type or tag not found")
     @api.marshal_with(short_product, as_list=True, code=200)
     def get(self):
         """Get all products of given type"""
+        characteristics_raw = request.args.get("characteristics")
+        characteristics = None
+        if characteristics_raw:
+            try:
+                characteristics = json.loads(characteristics_raw)
+            except (ValueError, TypeError):
+                abort(400, "Incorrect characteristics parameter")
         return products_service.get_products_by_type(
             get_uuid("type"),
             query_param_to_set("tags"),
             request.args.get("min_price"),
             request.args.get("max_price"),
             request.args.get("min_stars"),
-            request.args.get("max_stars")
+            request.args.get("max_stars"),
+            characteristics
         ), 200
 
 
