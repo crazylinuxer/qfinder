@@ -62,17 +62,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const starsMin = document.querySelector('input[name=stars_min]');
         const starsMax = document.querySelector('input[name=stars_max]');
 
-        starsMin.disabled = true;
-        starsMax.disabled = true;
-        priceMin.disabled = true;
-        priceMax.disabled = true;
+        // starsMin.disabled = true;
+        // starsMax.disabled = true;
+        // priceMin.disabled = true;
+        // priceMax.disabled = true;
 
         if (stat.min_stars && stat.max_stars) {
             starsMin.value = stat.min_stars;
             starsMax.value = stat.max_stars;
 
-            starsMin.disabled = false;
-            starsMax.disabled = false;
+            // starsMin.disabled = false;
+            // starsMax.disabled = false;
 
             starsMin.setAttribute('min', stat.min_stars);
             starsMax.setAttribute('max', stat.max_stars);
@@ -82,8 +82,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             priceMin.value = stat.min_price;
             priceMax.value = stat.max_price;
 
-            priceMin.disabled = false;
-            priceMax.disabled = false;
+            // priceMin.disabled = false;
+            // priceMax.disabled = false;
         }
 
         
