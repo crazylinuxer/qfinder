@@ -1,6 +1,6 @@
 from typing import List, Dict, Tuple, Any, Optional, Iterable, Set, Union
 
-from sqlalchemy.sql.functions import max as max_, min as min_
+from sqlalchemy.sql.functions import count, max as max_, min as min_
 from sqlalchemy.dialects.postgresql import json
 from sqlalchemy.sql import func
 from sqlalchemy import Float
@@ -34,13 +34,17 @@ def get_full_product_by_id(product_id: str) -> Optional[Tuple[Product, List[Feed
 
 def get_type_stat(type_id: str) -> Optional[Dict[str, Any]]:
     result = db.session.query(
-        ProductType.name, min_(Product.price), max_(Product.price), min_(Feedback.stars), max_(Feedback.stars)
+        ProductType.name, min_(Product.price), max_(Product.price),
+        min_(Feedback.stars), max_(Feedback.stars)
     ).\
         outerjoin(Product, Product.type == ProductType.id).outerjoin(Feedback).\
         filter(ProductType.id == type_id).group_by(ProductType.name).first()
     if not result:
         return None
+    name, min_price, max_price, min_stars, max_stars = result
+
     all_characteristics = db.session.query(Product.characteristics).filter(Product.type == type_id).all()
+    products_count = len(all_characteristics)
     characteristics_stat: Dict[str, Union[Set[str], List[str]]] = {}
     for characteristics in all_characteristics:
         for characteristic in characteristics[0]:
@@ -49,13 +53,18 @@ def get_type_stat(type_id: str) -> Optional[Dict[str, Any]]:
             characteristics_stat[characteristic].add(characteristics[0][characteristic])
     for characteristic_type in list(characteristics_stat.keys()):
         characteristics_stat[characteristic_type] = list(characteristics_stat[characteristic_type])
-    name, min_price, max_price, min_stars, max_stars = result
+
+    has_products_without_comments = (len(
+        db.session.query(count(Product.id)).distinct(Product.id).
+        filter(Product.type == type_id).filter(Feedback.product_id == Product.id).group_by(Product.id).all()
+    ) != products_count)
+
     return {
         "id": type_id,
         "name": name,
         "min_price": min_price,
         "max_price": max_price,
-        "min_stars": min_stars,
+        "min_stars": 0 if has_products_without_comments else min_stars,
         "max_stars": max_stars,
         "characteristics": characteristics_stat
     }
