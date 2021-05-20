@@ -202,6 +202,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(options.characteristics)
 
         console.log(options);
-        // renderItems(type_id, options);
+        renderItems(type_id, options);
     })
 })
