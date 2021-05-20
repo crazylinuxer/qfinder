@@ -1,7 +1,7 @@
 from typing import List, Dict, Tuple, Any, Optional, Iterable, Set, Union
 
 from sqlalchemy.sql.functions import count, max as max_, min as min_
-from sqlalchemy.dialects.postgresql import json
+from sqlalchemy.dialects.postgresql import json, array
 from sqlalchemy.sql import func
 from sqlalchemy import Float
 
@@ -90,5 +90,8 @@ def get_products_by_type(
     if max_stars:
         query = query.filter(Feedback.stars <= max_stars)
     if characteristics:
-        query = query.filter(json.CONTAINS(Product.characteristics, characteristics))
+        for characteristic in characteristics:
+            query = query.\
+                filter(json.HAS_KEY(Product.characteristics, characteristic)).\
+                filter(json.HAS_ANY(Product.characteristics[characteristic], array(characteristics[characteristic])))
     return query.group_by(Product.id, ProductPicture.id).all()

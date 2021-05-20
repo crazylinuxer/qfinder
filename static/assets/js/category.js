@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (items.length > 0) {
             items.forEach(item => {
                 parent.innerHTML += `
-                <a class="categoryMain__item" href="${Server.baseURL}templates/item/index.html?id=${item.id}">
+                <a class="categoryMain__item" href="${Server.baseURL}item/index.html?id=${item.id}">
                     <img src="${item.picture}" alt="${item.name}">
                     
                     ${renderStars(item.stars_avg)}
@@ -114,6 +114,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 select.classList.add('adv-filter');
                 
                 item.appendChild(text);
+
+                const emptyOption = document.createElement('option');
+                select.appendChild(emptyOption);
 
                 characteristics[key].forEach(value => {
                     const option = document.createElement('option');
