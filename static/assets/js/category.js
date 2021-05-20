@@ -102,30 +102,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (Object.hasOwnProperty.call(characteristics, key)) {
                 const element = characteristics[key];
                 
-                const item = document.createElement('div');
-                item.classList.add('filter-row');
+                const fieldset = document.createElement('fieldset');
+                const legend = document.createElement('legend');
 
-                const text = document.createElement('p');
+                // <fieldset>      
+                //     <legend>What is Your Favorite Pet?</legend>      
+                //     <input type="checkbox" name="favorite_pet" value="Cats">Cats<br>      
+                //     <input type="checkbox" name="favorite_pet" value="Dogs">Dogs<br>      
+                //     <input type="checkbox" name="favorite_pet" value="Birds">Birds<br>      
+                //     <br>      
+                //     <input type="submit" value="Submit now" />      
+                // </fieldset>      
 
-                const select = document.createElement('select');
-                select.name = key;
-                text.textContent = key;
+                legend.textContent = key;
 
-                select.classList.add('adv-filter');
                 
-                item.appendChild(text);
-
                 characteristics[key].forEach(value => {
-                    const option = document.createElement('option');
-                    option.setAttribute('value', value);
-                    option.textContent = value;
+                    
+                    const wrap = document.createElement('div');
+                    const input = document.createElement('input');
+                    input.setAttribute('type', 'checkbox');
+                    input.setAttribute('name', key);
+                    input.setAttribute('value', value);
+                    input.setAttribute('id', value);
 
-                    select.appendChild(option);
+                    const text = document.createElement('label');
+                    text.setAttribute('for', value);
+
+                    text.textContent = value;
+
+                    wrap.appendChild(input)
+                    wrap.appendChild(text)
+
+                    fieldset.appendChild(legend)
+                    fieldset.appendChild(wrap)
                 })                
-                console.log(element);
 
-                item.appendChild(select);
-                filtersWrapper.appendChild(item);
+               
+                
+                filtersWrapper.appendChild(fieldset);
             }
         }
 
@@ -163,15 +178,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             options.max_stars = starsMax.value;
         }
 
-        if(e.target.classList.contains('adv-filter')) {
-            const filters = document.querySelectorAll('.adv-filter');
+        // if(e.target.classList.contains('adv-filter')) {
+            const filters = document.querySelectorAll('.filter-wrapper fieldset input[type=checkbox]:checked');
 
             filters.forEach(select => {
-                options.characteristics[select.getAttribute('name')] = select.value;
+                if (options.characteristics[select.getAttribute('name')]) {
+                    options.characteristics[select.getAttribute('name')].push(select.value)
+                } else {
+                    options.characteristics[select.getAttribute('name')] = [select.value];
+                }
+                
             })
-        }
+        // }
 
-        
+        console.log(filters)
 
         const tags = document.querySelectorAll('.options input[type=checkbox]:checked');
 
@@ -182,6 +202,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(options.characteristics)
 
         console.log(options);
-        renderItems(type_id, options);
+        // renderItems(type_id, options);
     })
 })
