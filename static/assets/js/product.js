@@ -24,7 +24,7 @@ const renderSlider = (parent, data) => {
                         ${renderThumbs(data.pictures)}
                     </div>
                     <div class="itemMain__slider-current">
-                        <img src="../../static/assets/images/ryzen_box.png" alt="">
+                        <img src="../../static/assets/images/empty.png" alt="">
 
                         <div class="q">
                             ${renderStars(data.stars_avg)}
@@ -49,7 +49,12 @@ const initSlider = () => {
         thumb.classList.add('active');
 
         sliderImage.setAttribute('src', thumb.getAttribute('data-img'))
-    })
+    });
+
+    let btns = thumbs.querySelectorAll('.thumb');
+    if (btns.length !== 0) {
+        btns[0].click();
+    }
 }
 
 const renderDescription = (parent, data) => {
@@ -181,11 +186,12 @@ const renderComments = (parent, data) => {
                     const res = await Server.sendProductFeedback(data)
                     console.log(res);
                     const updatedProduct = await Server.getProductInfo(id);
+                    console.log(data)
                     window.location.reload();
                 })
             } 
     
-            
+
         });
     
         const addToCartBtn = document.querySelector('.addToCart');

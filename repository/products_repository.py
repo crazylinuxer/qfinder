@@ -2,6 +2,7 @@ from typing import List, Dict, Tuple, Any, Optional, Iterable, Set, Union
 
 from sqlalchemy.sql.functions import count, max as max_, min as min_
 from sqlalchemy.dialects.postgresql import json, array
+from sqlalchemy.sql.operators import or_
 from sqlalchemy.sql import func
 from sqlalchemy import Float
 
@@ -76,8 +77,15 @@ def get_products_by_type(
         min_stars: int = None, max_stars: int = None,
         characteristics: Dict[str, Any] = None
 ) -> List[Tuple[Product, ProductPicture, Optional[int]]]:
-    query = db.session.query(Product, ProductPicture, func.avg(Feedback.stars.cast(Float)).label('average_stars')).\
-        distinct(Product.id).outerjoin(Feedback).outerjoin(ProductPicture).\
+    avg_stars_subquery = db.session.query(Product.id, func.avg(Feedback.stars.cast(Float)).label('average_stars')).\
+        filter(Product.type == type_id).\
+        filter(Feedback.product_id == Product.id).\
+        group_by(Product.id).subquery()
+
+    query = db.session.query(Product, ProductPicture, func.avg(Feedback.stars.cast(Float)).label('avg_stars')).\
+        distinct(Product.id).\
+        outerjoin(avg_stars_subquery, avg_stars_subquery.c.id == Product.id).\
+        outerjoin(Feedback).outerjoin(ProductPicture).\
         filter(Product.type == type_id)
     if tags:
         query = query.filter(TagToProduct.tag_id.in_(tags)).filter(Product.id == TagToProduct.product_id)
@@ -86,9 +94,9 @@ def get_products_by_type(
     if max_price:
         query = query.filter(Product.price <= max_price)
     if min_stars:
-        query = query.filter(Feedback.stars >= min_stars)
+        query = query.filter(avg_stars_subquery.c.average_stars >= min_stars)
     if max_stars:
-        query = query.filter(Feedback.stars <= max_stars)
+        query = query.filter(or_(avg_stars_subquery.c.average_stars <= max_stars, Feedback.id == None))
     if characteristics:
         for characteristic in characteristics:
             query = query.\

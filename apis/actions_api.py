@@ -76,6 +76,7 @@ class Feedback(OptionsResource):
     @api.response(201, description="Success")
     def post(self):
         """Add a feedback to the product"""
+        print(api.payload)
         return actions_service.leave_feedback(get_jwt_identity(), **api.payload), 201
 
     @api.doc('remove_feedback', security='apikey',

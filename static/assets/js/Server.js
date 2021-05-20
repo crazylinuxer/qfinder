@@ -33,6 +33,8 @@ class Server {
 
         const result = await data.json();
 
+        console.log('RESULT', result);
+
         for (const key in result) {
             if (Object.hasOwnProperty.call(result, key)) {
                 const element = result[key];
@@ -231,7 +233,7 @@ class Server {
             console.log(result);
             if (data.status === 401) {
                 Server.refreshToken(sessionStorage.getItem('refresh_token'))
-                Server.getProductInfo(product_id, token);
+                Server.getProductInfo(product_id);
             } else {
                 return result;
             }

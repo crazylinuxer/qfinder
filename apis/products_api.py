@@ -62,13 +62,16 @@ class ProductsByType(OptionsResource):
                 characteristics = json.loads(characteristics_raw)
             except (ValueError, TypeError):
                 abort(400, "Incorrect characteristics parameter")
+        min_price, max_price, min_stars, max_stars = \
+            request.args.get("min_price"), request.args.get("max_price"),\
+            request.args.get("min_stars"), request.args.get("max_stars")
         return products_service.get_products_by_type(
             get_uuid("type"),
             query_param_to_set("tags"),
-            request.args.get("min_price"),
-            request.args.get("max_price"),
-            request.args.get("min_stars"),
-            request.args.get("max_stars"),
+            int(min_price) if min_price else None,
+            int(max_price) if max_price else None,
+            int(min_stars) if min_stars else None,
+            int(max_stars) if max_stars else None,
             characteristics
         ), 200
 
