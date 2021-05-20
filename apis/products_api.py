@@ -48,7 +48,7 @@ class ProductsByType(OptionsResource):
         "min_stars": {"type": float, "description": "Minimum stars to show"},
         "max_stars": {"type": float, "description": "Maximum stars to show"},
         "characteristics": {
-            "type": str, "description": "Product characteristics to include (for example, '{\"Frequency\":\"4 GHz\"}')"
+            "type": str, "description": "Product characteristics to include (for example, '{\"Frequency\":[\"4 GHz\"]}')"
         }
     })
     @api.response(404, description="Type or tag not found")
