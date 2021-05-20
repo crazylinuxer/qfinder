@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (items.length > 0) {
             items.forEach(item => {
                 parent.innerHTML += `
-                <a class="categoryMain__item" href="${Server.baseURL}/item/?id=${item.id}">
+                <a class="categoryMain__item" href="${Server.baseURL}templates/item/index.html?id=${item.id}">
                     <img src="${item.picture}" alt="${item.name}">
                     
                     ${renderStars(item.stars_avg)}
@@ -92,9 +92,50 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log(stat);
     }
 
+    renderCharacteristicsFilter = async (id) => {
+        const stat = await Server.getCategoryStat(id);
+        const characteristics = stat.characteristics;
+
+        const filtersWrapper = document.querySelector('.filter-wrapper');
+
+        for (const key in characteristics) {
+            if (Object.hasOwnProperty.call(characteristics, key)) {
+                const element = characteristics[key];
+                
+                const item = document.createElement('div');
+                item.classList.add('filter-row');
+
+                const text = document.createElement('p');
+
+                const select = document.createElement('select');
+                select.name = key;
+                text.textContent = key;
+
+                select.classList.add('adv-filter');
+                
+                item.appendChild(text);
+
+                characteristics[key].forEach(value => {
+                    const option = document.createElement('option');
+                    option.setAttribute('value', value);
+                    option.textContent = value;
+
+                    select.appendChild(option);
+                })                
+                console.log(element);
+
+                item.appendChild(select);
+                filtersWrapper.appendChild(item);
+            }
+        }
+
+        console.log(characteristics)
+    }
+
     renderForm();
     renderItems(type_id);
     renderStat(type_id);
+    renderCharacteristicsFilter(type_id)
 
     const form = document.querySelector('.categoryMain__options');
 
@@ -114,6 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             tags: [],
             min_price: +priceMin.value,
             max_price: +priceMax.value,
+            characteristics: {}
         };
 
         if (!starsMin.disabled && !starsMax.disabled) {
@@ -121,9 +163,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             options.max_stars = starsMax.value;
         }
 
+        if(e.target.classList.contains('adv-filter')) {
+            const filters = document.querySelectorAll('.adv-filter');
+
+            filters.forEach(select => {
+                options.characteristics[select.getAttribute('name')] = select.value;
+            })
+        }
+
+        
+
         const tags = document.querySelectorAll('.options input[type=checkbox]:checked');
 
         tags.forEach(input => options.tags.push(input.getAttribute('id')));
+
+        options.characteristics = encodeURI(JSON.stringify(options.characteristics));
+
+        console.log(options.characteristics)
 
         console.log(options);
         renderItems(type_id, options);

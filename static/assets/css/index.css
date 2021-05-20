@@ -842,7 +842,19 @@ body {
   display: none;
 }
 
-.wishMain__item .del {
-  display: block;
+.filter-wrapper {
+  margin: 30px 0;
 }
+
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #000;
+  padding: 10px 0;
+}
+.filter-row p {
+  margin: 0;
+}
+
 /*# sourceMappingURL=index.css.map */
