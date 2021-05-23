@@ -175,10 +175,10 @@ body {
   box-sizing: border-box;
 }
 .categoryMain__items {
-  display: flex;
-  flex-wrap: wrap;
+  /*display: flex;*/
+  /*flex-wrap: wrap;*/
   width: 67%;
-  align-items: flex-start;
+  /*align-items: flex-start;*/
 }
 .categoryMain__item {
   width: 30%;
@@ -187,7 +187,8 @@ body {
   border-radius: 8px;
   padding: 11px 32px;
   min-width: 278px;
-  display: block;
+  /*display: block;*/
+  display: inline-block;
   color: #000;
   text-decoration: none;
   transition: 0.3s transform;

@@ -198,3 +198,30 @@ class Feedback(Base, ImprovedBase):
 
     product_ref = relationship("Product", back_populates='feedback', foreign_keys=[product_id])
     user_ref = relationship("User", back_populates='feedback', foreign_keys=[user_id])
+
+
+def fill_db_with_test_data():
+    import random
+
+    def generate_random_token(length: int) -> str:
+        letters = bytes(range(b'a'[0], b'z'[0] + 1)).decode()
+        symbols = list(letters + letters.upper() + "-_")
+        symbols.extend(bytes(range(b'0'[0], b'9'[0] + 1)).decode())
+        return str.join('', (random.choice(symbols) for _ in range(length)))
+
+    with app.app_context():
+        types = db.session.query(ProductType).all()
+        for i in range(1000):
+            for j in range(2000):
+                new_product = Product()
+                new_product.id = str(uuid.uuid4())
+                new_product.price = random.randint(1, 100000)
+                new_product.description = generate_random_token(100)
+                new_product.name = generate_random_token(16)
+                new_product.characteristics = {generate_random_token(1): generate_random_token(2)}
+                new_product.type = random.choice(types).id
+                db.session.add(new_product)
+            db.session.commit()
+
+
+#fill_db_with_test_data()
